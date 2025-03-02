@@ -10,7 +10,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{304CF7D3-7257-6CB7-1930-0D24C3D380DC}</ProjectGuid>
+    <ProjectGuid>{CD22ACB9-633E-AF05-6213-BDCB1E6EEA68}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -57,51 +57,51 @@
     <Analyzer Include="C:\Program Files (x86)\Microsoft Visual Studio Tools for Unity\16.0\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\Level.cs" />
-    <Compile Include="Assets\Scripts\GameManager.cs" />
-    <Compile Include="Assets\Scripts\Cell.cs" />
-    <Compile Include="Assets\Generator\LevelGenerator.cs" />
-    <Compile Include="Assets\Samples\Input System\1.4.4\Custom Binding Composite\CustomComposite.cs" />
-    <Compile Include="Assets\Samples\Input System\1.4.4\Custom Device\CustomDevice.cs" />
-    <Compile Include="Assets\Samples\Input System\1.4.4\Custom Device Usages\CustomDeviceUsages.cs" />
-    <Compile Include="Assets\Samples\Input System\1.4.4\Simple Demo\SimpleController_UsingPlayerInput.cs" />
-    <Compile Include="Assets\Samples\Input System\1.4.4\Simple Demo\SimpleController_UsingActions.cs" />
-    <Compile Include="Assets\Samples\Input System\1.4.4\Simple Demo\SimpleController_UsingState.cs" />
-    <Compile Include="Assets\Samples\Input System\1.4.4\Simple Demo\SimpleController_UsingActionAsset.cs" />
-    <Compile Include="Assets\Samples\Input System\1.4.4\Simple Demo\SimpleControls.cs" />
-    <Compile Include="Assets\Samples\Input System\1.4.4\Simple Multiplayer\SimpleMultiplayerPlayer.cs" />
-    <Compile Include="Assets\Samples\Input System\1.4.4\Unity Remote\UnityRemoteTestScript.cs" />
-    <Compile Include="Assets\Demo\Scripts\Common\ScoringController.cs" />
-    <Compile Include="Assets\ControlMaps\GamepadControls.cs" />
-    <Compile Include="Assets\Scripts\Common\Singleton.cs" />
-    <Compile Include="Assets\Scripts\Drawing\PointerInput.cs" />
-    <Compile Include="Assets\ControlMaps\PointerControls.cs" />
-    <Compile Include="Assets\Scripts\Gestures\GestureController.cs" />
-    <Compile Include="Assets\Demo\Scripts\Drawing\DrawingController.cs" />
-    <Compile Include="Assets\Demo\Scripts\Swiping\TrashType.cs" />
-    <Compile Include="Assets\Demo\Scripts\Swiping\SpawnController.cs" />
-    <Compile Include="Assets\Scripts\Drawing\PointerInputManager.cs" />
-    <Compile Include="Assets\Demo\Scripts\Menu\LevelSelectScreen.cs" />
-    <Compile Include="Assets\Scripts\Gestures\ActiveGesture.cs" />
     <Compile Include="Assets\Demo\Scripts\Tapping\TapTarget.cs" />
     <Compile Include="Assets\Demo\Scripts\Drawing\DrawingTool.cs" />
-    <Compile Include="Assets\Demo\Scripts\Menu\LevelSelectItem.cs" />
-    <Compile Include="Assets\Demo\Scripts\Drawing\DrawingLine.cs" />
-    <Compile Include="Assets\Demo\Scripts\Drawing\DrawingRenderer.cs" />
-    <Compile Include="Assets\Demo\Scripts\Tapping\SpawnController.cs" />
-    <Compile Include="Assets\Scripts\Common\Helpers.cs" />
-    <Compile Include="Assets\Demo\Scripts\Common\SceneLoadButton.cs" />
-    <Compile Include="Assets\Scripts\Controller\GamepadInputManager.cs" />
+    <Compile Include="Assets\Samples\Input System\1.4.4\Simple Demo\SimpleControls.cs" />
+    <Compile Include="Assets\Samples\Input System\1.4.4\Simple Demo\SimpleController_UsingActions.cs" />
+    <Compile Include="Assets\Demo\Scripts\Drawing\DrawingController.cs" />
+    <Compile Include="Assets\Samples\Input System\1.4.4\Custom Device\CustomDevice.cs" />
+    <Compile Include="Assets\Scripts\Level.cs" />
     <Compile Include="Assets\Demo\Scripts\Common\VersionLabel.cs" />
-    <Compile Include="Assets\Demo\Scripts\Tapping\Effects.cs" />
-    <Compile Include="Assets\Demo\Scripts\Tapping\TappingController.cs" />
-    <Compile Include="Assets\Scripts\Gestures\SwipeInput.cs" />
-    <Compile Include="Assets\Demo\Scripts\Swiping\Gutter.cs" />
-    <Compile Include="Assets\Demo\Scripts\Swiping\Trash.cs" />
-    <Compile Include="Assets\Scripts\Gestures\TapInput.cs" />
-    <Compile Include="Assets\Demo\Scripts\Drawing\UI\ColorSwatch.cs" />
-    <Compile Include="Assets\Demo\Scripts\Swiping\SwipingController.cs" />
+    <Compile Include="Assets\ControlMaps\GamepadControls.cs" />
+    <Compile Include="Assets\Scripts\Gestures\ActiveGesture.cs" />
+    <Compile Include="Assets\Scripts\GameManager.cs" />
+    <Compile Include="Assets\Demo\Scripts\Menu\LevelSelectItem.cs" />
     <Compile Include="Assets\Demo\Scripts\Swiping\Bin.cs" />
+    <Compile Include="Assets\ControlMaps\PointerControls.cs" />
+    <Compile Include="Assets\Scripts\Common\Helpers.cs" />
+    <Compile Include="Assets\Samples\Input System\1.4.4\Simple Demo\SimpleController_UsingActionAsset.cs" />
+    <Compile Include="Assets\Scripts\Common\Singleton.cs" />
+    <Compile Include="Assets\Scripts\Drawing\PointerInput.cs" />
+    <Compile Include="Assets\Demo\Scripts\Swiping\TrashType.cs" />
+    <Compile Include="Assets\Demo\Scripts\Common\SceneLoadButton.cs" />
+    <Compile Include="Assets\Demo\Scripts\Swiping\SwipingController.cs" />
+    <Compile Include="Assets\Samples\Input System\1.4.4\Custom Binding Composite\CustomComposite.cs" />
+    <Compile Include="Assets\Scripts\Gestures\TapInput.cs" />
+    <Compile Include="Assets\Demo\Scripts\Common\ScoringController.cs" />
+    <Compile Include="Assets\Demo\Scripts\Tapping\SpawnController.cs" />
+    <Compile Include="Assets\Demo\Scripts\Swiping\Gutter.cs" />
+    <Compile Include="Assets\Samples\Input System\1.4.4\Simple Demo\SimpleController_UsingPlayerInput.cs" />
+    <Compile Include="Assets\Scripts\Gestures\SwipeInput.cs" />
+    <Compile Include="Assets\Scripts\Drawing\PointerInputManager.cs" />
+    <Compile Include="Assets\Scripts\Controller\GamepadInputManager.cs" />
+    <Compile Include="Assets\Demo\Scripts\Swiping\SpawnController.cs" />
+    <Compile Include="Assets\Demo\Scripts\Drawing\UI\ColorSwatch.cs" />
+    <Compile Include="Assets\Samples\Input System\1.4.4\Unity Remote\UnityRemoteTestScript.cs" />
+    <Compile Include="Assets\Scripts\Cell.cs" />
+    <Compile Include="Assets\Scripts\Gestures\GestureController.cs" />
+    <Compile Include="Assets\Demo\Scripts\Drawing\DrawingRenderer.cs" />
+    <Compile Include="Assets\Demo\Scripts\Tapping\Effects.cs" />
+    <Compile Include="Assets\Demo\Scripts\Swiping\Trash.cs" />
+    <Compile Include="Assets\Samples\Input System\1.4.4\Simple Multiplayer\SimpleMultiplayerPlayer.cs" />
+    <Compile Include="Assets\Samples\Input System\1.4.4\Simple Demo\SimpleController_UsingState.cs" />
+    <Compile Include="Assets\Demo\Scripts\Tapping\TappingController.cs" />
+    <Compile Include="Assets\Generator\LevelGenerator.cs" />
+    <Compile Include="Assets\Demo\Scripts\Menu\LevelSelectScreen.cs" />
+    <Compile Include="Assets\Demo\Scripts\Drawing\DrawingLine.cs" />
+    <Compile Include="Assets\Samples\Input System\1.4.4\Custom Device Usages\CustomDeviceUsages.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
@@ -796,14 +796,11 @@
     <Reference Include="Unity.2D.Sprite.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.2D.Sprite.Editor.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.2D.Psdimporter.Editor">
-      <HintPath>Library\ScriptAssemblies\Unity.2D.Psdimporter.Editor.dll</HintPath>
-    </Reference>
     <Reference Include="Unity.2D.Path.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.2D.Path.Editor.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.InternalAPIEditorBridge.001">
-      <HintPath>Library\ScriptAssemblies\Unity.InternalAPIEditorBridge.001.dll</HintPath>
+    <Reference Include="Unity.2D.Psdimporter.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.2D.Psdimporter.Editor.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.UI">
       <HintPath>Library\ScriptAssemblies\UnityEditor.UI.dll</HintPath>
@@ -813,6 +810,9 @@
     </Reference>
     <Reference Include="Unity.2D.Tilemap.Extras.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.2D.Tilemap.Extras.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.InternalAPIEditorBridge.001">
+      <HintPath>Library\ScriptAssemblies\Unity.InternalAPIEditorBridge.001.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>Library\ScriptAssemblies\UnityEngine.UI.dll</HintPath>
@@ -852,20 +852,24 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="Unity.InputSystem.InGameHints.csproj">
-      <Project>{8AE227C9-3FE5-3417-9754-BB2FD6FA70F8}</Project>
-      <Name>Unity.InputSystem.InGameHints</Name>
+    <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
+      <Project>{F9009CDA-44B6-ABC6-52D0-35FF53542F6E}</Project>
+      <Name>Assembly-CSharp-firstpass</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.InputSystem.Recorder.csproj">
-      <Project>{0B31F853-3DD6-0EE5-CD3F-A6E48D4A628A}</Project>
+      <Project>{2649B0D6-D753-AB6A-B9ED-EE2FA9399036}</Project>
       <Name>Unity.InputSystem.Recorder</Name>
     </ProjectReference>
+    <ProjectReference Include="Unity.InputSystem.InGameHints.csproj">
+      <Project>{A61F6361-C212-BD06-7D47-9939194FDBC6}</Project>
+      <Name>Unity.InputSystem.InGameHints</Name>
+    </ProjectReference>
     <ProjectReference Include="UnityEngine.InputSystem.Samples.UIvsGameInput.csproj">
-      <Project>{0475A2D4-34AF-0F95-6E0E-2E3524FA46A2}</Project>
+      <Project>{E5A01C78-00BB-FF29-2B5A-F605786BA8EF}</Project>
       <Name>UnityEngine.InputSystem.Samples.UIvsGameInput</Name>
     </ProjectReference>
     <ProjectReference Include="InputSystem.Samples.Visualizers.csproj">
-      <Project>{BF6DD25D-CC76-8AF7-E7BC-86ED77AA12C2}</Project>
+      <Project>{26D79F43-1A30-EC3B-F002-39832AE46F8A}</Project>
       <Name>InputSystem.Samples.Visualizers</Name>
     </ProjectReference>
   </ItemGroup>

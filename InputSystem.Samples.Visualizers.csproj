@@ -10,7 +10,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{BF6DD25D-CC76-8AF7-E7BC-86ED77AA12C2}</ProjectGuid>
+    <ProjectGuid>{26D79F43-1A30-EC3B-F002-39832AE46F8A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>InputSystem.Samples.Visualizers</AssemblyName>
@@ -57,9 +57,9 @@
     <Analyzer Include="C:\Program Files (x86)\Microsoft Visual Studio Tools for Unity\16.0\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Samples\Input System\1.4.4\Visualizers\InputControlVisualizer.cs" />
     <Compile Include="Assets\Samples\Input System\1.4.4\Visualizers\InputActionVisualizer.cs" />
     <Compile Include="Assets\Samples\Input System\1.4.4\Visualizers\InputVisualizer.cs" />
+    <Compile Include="Assets\Samples\Input System\1.4.4\Visualizers\InputControlVisualizer.cs" />
     <Compile Include="Assets\Samples\Input System\1.4.4\Visualizers\VisualizationHelpers.cs" />
   </ItemGroup>
   <ItemGroup>

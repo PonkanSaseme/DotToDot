@@ -65,17 +65,17 @@ public class GameManager : MonoBehaviour
         startPos = new Vector2Int(Mathf.FloorToInt(worldPos.y), Mathf.FloorToInt(worldPos.x));
         endPos = startPos;
 
-        // ✅ 檢查是否從 `StartPosition` 開始，否則不允許開始畫線
+        // 檢查是否從 StartPosition 開始，否則不允許開始畫線
         if (startPos != _level.StartPosition)
         {
             isPressing = false;
             return;
         }
 
-        // ✅ 立即標記開始格子為「填滿」
+        // 立即標記開始格子為「填滿」
         cells[startPos.x, startPos.y].Add();
 
-        // ✅ 初始化 `filledPoints`
+        // 初始化 filledPoints
         filledPoints.Clear();
         filledPoints.Add(startPos);
     }
@@ -143,14 +143,17 @@ public class GameManager : MonoBehaviour
         {
             for (int j = 0; j < _level.Col; j++)
             {
+                int index = i * _level.Col + j; // 計算 GridData 的索引
+                bool isWalkable = _level.GetCell(i, j); // 從 GridData 取得該格子是否可走
+
                 if (cells[i, j] == null)
                 {
                     cells[i, j] = Instantiate(_cellPrefab, _parent);
                     cells[i, j].transform.position = new Vector3(j + 0.5f, i + 0.5f, 0);
                 }
 
-                // ✅ **正確載入 Level 的格子狀態**
-                cells[i, j].Init(_level.GetCell(i, j));
+                //**正確標記 Cell 是否為不可走**
+                cells[i, j].Init(isWalkable);
 
                 if (new Vector2Int(i, j) == _level.StartPosition)
                     cells[i, j].SetStartColor();
@@ -163,6 +166,7 @@ public class GameManager : MonoBehaviour
 
 
 
+
     private void Update()
     {
         if (hasGameFinished || !hasGameStart || !isPressing) return;
@@ -172,7 +176,7 @@ public class GameManager : MonoBehaviour
 
         if (!IsNeighbour()) return;
 
-        // ✅ 如果 `filledPoints` 只有 `startPos`，則需要建立第一條線
+        //如果 filledPoints 只有startPos，則需要建立第一條線
         if (filledPoints.Count == 1)
         {
             filledPoints.Add(endPos);
@@ -218,8 +222,14 @@ public class GameManager : MonoBehaviour
         if (edges.Count > 0) return false;
         if (cells[startPos.x, startPos.y].Filled) return false;
         if (cells[endPos.x, endPos.y].Filled) return false;
+
+        //**檢查 GridData，確保這條路線不穿過障礙物**
+        if (!_level.GetCell(startPos.x, startPos.y)) return false;
+        if (!_level.GetCell(endPos.x, endPos.y)) return false;
+
         return true;
     }
+
 
     private bool AddToEnd()
     {
@@ -228,8 +238,13 @@ public class GameManager : MonoBehaviour
         Cell lastCell = cells[pos.x, pos.y];
         if (cells[startPos.x, startPos.y] != lastCell) return false;
         if (cells[endPos.x, endPos.y].Filled) return false;
+
+        //**確保不能畫線到障礙物**
+        if (!_level.GetCell(endPos.x, endPos.y)) return false;
+
         return true;
     }
+
 
     private bool AddToStart()
     {
@@ -238,8 +253,13 @@ public class GameManager : MonoBehaviour
         Cell lastCell = cells[pos.x, pos.y];
         if (cells[startPos.x, startPos.y] != lastCell) return false;
         if (cells[endPos.x, endPos.y].Filled) return false;
+
+        //**確保不能畫線到障礙物**
+        if (!_level.GetCell(endPos.x, endPos.y)) return false;
+
         return true;
     }
+
 
     private bool RemoveFromEnd()
     {
@@ -310,8 +330,17 @@ public class GameManager : MonoBehaviour
 
     private bool IsValid(Vector2Int pos)
     {
-        return pos.x >= 0 && pos.y >= 0 && pos.x < _level.Row && pos.y < _level.Col;
+        //確保pos在地圖範圍內
+        if (pos.x < 0 || pos.y < 0 || pos.x >= _level.Row || pos.y >= _level.Col)
+            return false;
+
+        //確保該格子是「可走的」
+        if (!_level.GetCell(pos.x, pos.y)) // GetCell() 應該回傳 true = 可走, false = 不可走
+            return false;
+
+        return true;
     }
+
 
     private void CheckWin()
     {
@@ -323,7 +352,7 @@ public class GameManager : MonoBehaviour
                     return;
             }
         }
-        // ✅ 必須讓玩家最後停在 `EndPosition` 才算勝利
+        //必須讓玩家最後停在 `EndPosition` 才算勝利
         if (endPos != _level.EndPosition)
         {
             return; // 不是終點，遊戲還沒成功

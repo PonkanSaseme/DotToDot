@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Cell : MonoBehaviour
 {
@@ -9,15 +9,18 @@ public class Cell : MonoBehaviour
     [SerializeField] private Color _emptyColor;
     [SerializeField] private Color _filledColor;
     [SerializeField] private SpriteRenderer _cellRenderer;
+    [SerializeField] private Color _startColor; // 新增自定義開始點顏色
+    [SerializeField] private Color _endColor; // 新增自定義結束點顏色
 
-    public void Init(bool isBlocked)
+    public void Init(bool isWalkable)
     {
-        Blocked = isBlocked;
-        Filled = false; // ��l�Ʈɤ��i��R
+        Blocked = !isWalkable; //如果 `isWalkable = false`，代表這是障礙物
+        Filled = false;
 
-        // �]�w�C��
-        _cellRenderer.color = Blocked ? _emptyColor : _blockedColor;
+        //**用顏色來區分可走與不可走的格子**
+        _cellRenderer.color = Blocked ? _blockedColor : _emptyColor;
     }
+
 
     public void Add()
     {
@@ -40,11 +43,11 @@ public class Cell : MonoBehaviour
 
     public void SetStartColor()
     {
-        _cellRenderer.color = Color.green; // �Ϊ̧A�i�H�b Inspector ���]�w�ۭq�C��
+        _cellRenderer.color = _startColor; // 或者你可以在 Inspector 內設定自訂顏色
     }
 
     public void SetEndColor()
     {
-        _cellRenderer.color = Color.red; // �Ϊ̧A�i�H�b Inspector ���]�w�ۭq�C��
+        _cellRenderer.color = _endColor; // 或者你可以在 Inspector 內設定自訂顏色
     }
 }

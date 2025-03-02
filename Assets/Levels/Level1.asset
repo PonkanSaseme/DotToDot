@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Level1
   m_EditorClassIdentifier: 
   Row: 4
-  Col: 4
-  GridData: 01010100010101010101000100000001
-  StartPosition: {x: 0, y: 0}
-  EndPosition: {x: 3, y: 3}
+  Col: 5
+  GridData: 0101010101010000010101000001010101010101
+  StartPosition: {x: 0, y: 4}
+  EndPosition: {x: 3, y: 4}

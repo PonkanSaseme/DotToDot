@@ -10,7 +10,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{0475A2D4-34AF-0F95-6E0E-2E3524FA46A2}</ProjectGuid>
+    <ProjectGuid>{E5A01C78-00BB-FF29-2B5A-F605786BA8EF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>UnityEngine.InputSystem.Samples.UIvsGameInput</AssemblyName>

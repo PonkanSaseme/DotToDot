@@ -10,7 +10,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{8AE227C9-3FE5-3417-9754-BB2FD6FA70F8}</ProjectGuid>
+    <ProjectGuid>{A61F6361-C212-BD06-7D47-9939194FDBC6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Unity.InputSystem.InGameHints</AssemblyName>

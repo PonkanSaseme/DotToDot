@@ -10,7 +10,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{96388296-970A-C6B0-4B78-CB82C9243976}</ProjectGuid>
+    <ProjectGuid>{D458DC91-8FA2-70CE-DF12-B45DBD3B4705}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Unity.InputSystem.RebindingUI</AssemblyName>
@@ -57,9 +57,9 @@
     <Analyzer Include="C:\Program Files (x86)\Microsoft Visual Studio Tools for Unity\16.0\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Samples\Input System\1.4.4\Rebinding UI\RebindActionUIEditor.cs" />
     <Compile Include="Assets\Samples\Input System\1.4.4\Rebinding UI\RebindSaveLoad.cs" />
     <Compile Include="Assets\Samples\Input System\1.4.4\Rebinding UI\RebindActionUI.cs" />
+    <Compile Include="Assets\Samples\Input System\1.4.4\Rebinding UI\RebindActionUIEditor.cs" />
     <Compile Include="Assets\Samples\Input System\1.4.4\Rebinding UI\GamepadIconsExample.cs" />
   </ItemGroup>
   <ItemGroup>

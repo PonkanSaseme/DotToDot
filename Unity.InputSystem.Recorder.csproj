@@ -10,7 +10,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{0B31F853-3DD6-0EE5-CD3F-A6E48D4A628A}</ProjectGuid>
+    <ProjectGuid>{2649B0D6-D753-AB6A-B9ED-EE2FA9399036}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Unity.InputSystem.Recorder</AssemblyName>
