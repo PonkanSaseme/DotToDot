@@ -14,12 +14,13 @@ public class Cell : MonoBehaviour
 
     public void Init(bool isWalkable)
     {
-        Blocked = !isWalkable; //如果isWalkable = false，代表這是障礙物
-        Filled = false;
+        Blocked = !isWalkable;
+        Filled = Blocked; //**如果格子是障礙物，則應該設定為已填滿**
 
         //**用顏色來區分可走與不可走的格子**
         _cellRenderer.color = Blocked ? _blockedColor : _emptyColor;
     }
+
 
 
     public void Add()

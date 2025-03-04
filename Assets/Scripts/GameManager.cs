@@ -66,33 +66,54 @@ public class GameManager : MonoBehaviour
 
     private void OnTouchStarted(InputAction.CallbackContext context)
     {
+        if (!_parentContainer.gameObject.activeInHierarchy)
+        {
+            Debug.LogWarning("❌ 父物件尚未開啟，取消觸控偵測！");
+            return;
+        }
+
         isPressing = true;
         curScreenPos = screenPos.ReadValue<Vector2>();
         Vector3 worldPos = Camera.main.ScreenToWorldPoint(curScreenPos);
-        startPos = new Vector2Int(Mathf.FloorToInt(worldPos.y), Mathf.FloorToInt(worldPos.x));
+
+        startPos = new Vector2Int(Mathf.FloorToInt(worldPos.x), Mathf.FloorToInt(worldPos.y));
         endPos = startPos;
 
-        //透過startPos.y來判斷玩家目前在哪個 Level
-        currentLevelIndex = Mathf.Clamp(Mathf.FloorToInt(startPos.y / (_levels[0].Row + 2)), 0, _levels.Count - 1);
+        //確保startPos在cellsList的範圍內
+        if (!IsValid(startPos, currentLevelIndex))
+        {
+            isPressing = false;
+            return;
+        }
 
-        //檢查是否從對應 Level 的 StartPosition 開始
+        //確保startPos是該Level的StartPosition
         if (startPos != _levels[currentLevelIndex].StartPosition)
         {
             isPressing = false;
             return;
         }
 
-        //立即標記開始格子為「填滿」
-        cellsList[currentLevelIndex][startPos.x, startPos.y].Add();
+        //確保Cell存在並能夠填滿
+        if (cellsList[currentLevelIndex] != null && cellsList[currentLevelIndex][startPos.x, startPos.y] != null)
+        {
+            cellsList[currentLevelIndex][startPos.x, startPos.y].Add();
+        }
+        else
+        {
+            Debug.LogError($"❌ 無法填滿格子，cellsList[{currentLevelIndex}] 尚未初始化！");
+        }
 
-        //初始化對應關卡的 filledPoints
         filledPointsList[currentLevelIndex].Clear();
         filledPointsList[currentLevelIndex].Add(startPos);
     }
 
+
     private void OnTouchPerformed(InputAction.CallbackContext context)
     {
         curScreenPos = screenPos.ReadValue<Vector2>();
+
+        Vector3 worldPos = Camera.main.ScreenToWorldPoint(curScreenPos);
+        endPos = new Vector2Int(Mathf.FloorToInt(worldPos.x), Mathf.FloorToInt(worldPos.y)); //確保endPos會更新
     }
 
     private void OnTouchCanceled(InputAction.CallbackContext context)
@@ -106,8 +127,12 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
+        //確保 parent 父物件開啟
+        _parentContainer.gameObject.SetActive(true);
+
         Initialize();
     }
+
 
     private void Initialize()
     {
@@ -199,6 +224,9 @@ public class GameManager : MonoBehaviour
         Vector3 worldPos = Camera.main.ScreenToWorldPoint(screenPos.ReadValue<Vector2>());
         endPos = new Vector2Int(Mathf.FloorToInt(worldPos.y), Mathf.FloorToInt(worldPos.x));
 
+        if (!IsValid(startPos, currentLevelIndex) || !IsValid(endPos, currentLevelIndex))
+            return; //先檢查範圍
+
         if (!IsNeighbour()) return;
 
         //如果 filledPoints 只有 startPos，則需要建立第一條線
@@ -247,13 +275,21 @@ public class GameManager : MonoBehaviour
 
     private bool AddEmpty(int levelIndex)
     {
+        //**先確保 `startPos` 和 `endPos` 在合法範圍內**
+        if (!IsValid(startPos, levelIndex) || !IsValid(endPos, levelIndex))
+            return false;
+
         if (edgesList[levelIndex].Count > 0) return false;
         if (cellsList[levelIndex][startPos.x, startPos.y].Filled) return false;
         if (cellsList[levelIndex][endPos.x, endPos.y].Filled) return false;
+
+        //**檢查 GridData，確保這條路線不穿過障礙物**
         if (!_levels[levelIndex].GetCell(startPos.x, startPos.y)) return false;
         if (!_levels[levelIndex].GetCell(endPos.x, endPos.y)) return false;
+
         return true;
     }
+
 
 
     private bool AddToEnd(int levelIndex)
@@ -280,7 +316,6 @@ public class GameManager : MonoBehaviour
 
         return true;
     }
-
 
 
     private bool RemoveFromEnd()
@@ -345,23 +380,24 @@ public class GameManager : MonoBehaviour
 
     private void SpawnEdge(Vector2Int start, Vector2Int end, bool insertAtStart = false)
     {
-        Transform edge = Instantiate(_edgePrefab, levelParents[currentLevelIndex]); //使用該關卡的 parent
+        Transform edge = Instantiate(_edgePrefab, levelParents[currentLevelIndex]); //使用正確的 Parent
         if (insertAtStart)
             edgesList[currentLevelIndex].Insert(0, edge);
         else
             edgesList[currentLevelIndex].Add(edge);
 
-        float yOffset = levelParents[currentLevelIndex].position.y; //取得該 Level 的 Y 偏移量
+        float yOffset = levelParents[currentLevelIndex].position.y; //加上 Level 偏移量
 
         edge.transform.position = new Vector3(
             start.y * 0.5f + 0.5f + end.y * 0.5f,
-            start.x * 0.5f + 0.5f + end.x * 0.5f + yOffset, //加上 Level 的 Y 偏移
+            start.x * 0.5f + 0.5f + end.x * 0.5f + yOffset, //修正 Y 位置
             0f
         );
 
         bool horizontal = (end.y - start.y) != 0;
         edge.transform.eulerAngles = new Vector3(0, 0, horizontal ? 90f : 0);
     }
+
 
 
     private void RemoveLastEdge()
@@ -410,21 +446,22 @@ public class GameManager : MonoBehaviour
     {
         return IsValid(startPos, currentLevelIndex) &&
                IsValid(endPos, currentLevelIndex) &&
-               directions.Contains(startPos - endPos);
+               directions.Contains(endPos - startPos); //修正方向計算
     }
-
 
 
     private bool IsValid(Vector2Int pos, int levelIndex)
     {
+        if (levelIndex < 0 || levelIndex >= _levels.Count) return false; //檢查levelIndex
         if (pos.x < 0 || pos.y < 0 || pos.x >= _levels[levelIndex].Row || pos.y >= _levels[levelIndex].Col)
             return false;
 
-        if (!_levels[levelIndex].GetCell(pos.x, pos.y))
+        if (!_levels[levelIndex].GetCell(pos.x, pos.y)) //檢查是否為障礙物
             return false;
 
         return true;
     }
+
 
     private void CheckWin()
     {

@@ -504,7 +504,7 @@ MonoBehaviour:
     - m_Name: 
       m_Id: baba135e-eaad-4ba7-91cb-de2d33fe31eb
       m_Path: <Mouse>/leftButton
-      m_Interactions: 
+      m_Interactions: Press
       m_Processors: 
       m_Groups: 
       m_Action: Press
@@ -512,7 +512,7 @@ MonoBehaviour:
     - m_Name: 
       m_Id: 626d6db0-8aaf-4eda-aa3c-50bf2e6b4ba0
       m_Path: <Touchscreen>/Press
-      m_Interactions: 
+      m_Interactions: Press
       m_Processors: 
       m_Groups: 
       m_Action: Press
@@ -529,7 +529,7 @@ MonoBehaviour:
     - m_Name: 
       m_Id: db617a7a-9177-4c0f-b061-81d18daff5de
       m_Path: <Mouse>/position
-      m_Interactions: 
+      m_Interactions: Press
       m_Processors: 
       m_Groups: 
       m_Action: Screen Pos
@@ -537,7 +537,7 @@ MonoBehaviour:
     - m_Name: 
       m_Id: dc0c85f6-d53a-4eab-9608-bfdd12c7db08
       m_Path: <Touchscreen>/position
-      m_Interactions: 
+      m_Interactions: Press
       m_Processors: 
       m_Groups: 
       m_Action: Screen Pos
@@ -830,7 +830,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: 4bcc6704fb110bc4a9e1ff9d4b0cd43f, type: 3}
+  m_Actions: {fileID: 0}
   m_NotificationBehavior: 0
   m_UIInputModule: {fileID: 0}
   m_DeviceLostEvent:
@@ -845,7 +845,7 @@ MonoBehaviour:
   m_ActionEvents: []
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
-  m_DefaultActionMap: action map
+  m_DefaultActionMap: gameplay
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 142682094}
 --- !u!4 &1179804354

@@ -35,7 +35,6 @@ namespace TransitionScreenPackage
             //Debug檢查是否成功找到parent
             if (_parent != null)
             {
-                Debug.Log("找到parent: " + _parent.name);
                 _parent.SetActive(false); //確保轉場開始時parent是關閉的
             }
             else
@@ -61,7 +60,6 @@ namespace TransitionScreenPackage
             if (_parent != null)
             {
                 _parent.SetActive(true);
-                Debug.Log("parent已開啟");
             }
             else
             {
