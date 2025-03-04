@@ -17,3 +17,4 @@ MonoBehaviour:
   GridData: 0101010101010000010101000001010101010101
   StartPosition: {x: 0, y: 4}
   EndPosition: {x: 3, y: 4}
+  Position: {x: 0, y: 0}

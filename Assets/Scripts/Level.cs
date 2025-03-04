@@ -13,6 +13,8 @@ public class Level : ScriptableObject
     public Vector2Int StartPosition; // 開始格子
     [Tooltip("範圍:0~Col-1")]
     public Vector2Int EndPosition;   // 結束格子
+    [Header("自訂生成位置")]
+    public Vector2 Position; //允許在 Inspector 內設定 Level 的生成座標
 
     private void OnValidate()
     {

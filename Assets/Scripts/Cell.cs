@@ -14,7 +14,7 @@ public class Cell : MonoBehaviour
 
     public void Init(bool isWalkable)
     {
-        Blocked = !isWalkable; //如果 `isWalkable = false`，代表這是障礙物
+        Blocked = !isWalkable; //如果isWalkable = false，代表這是障礙物
         Filled = false;
 
         //**用顏色來區分可走與不可走的格子**
