@@ -11,36 +11,10 @@ namespace TransitionScreenPackage
         public FinishedReveal FinishedRevealEvent;
 
         public delegate void FinishedHide();
-        public FinishedHide FinishedHideEvent;
+        public event FinishedHide FinishedHideEvent;
 
         private void Awake()
         {
-            //先用FindWithTag()尋找parent
-            _parent = GameObject.FindWithTag("parent");
-
-            // 如果FindWithTag()找不到，改用FindObjectsOfType<Transform>()
-            if (_parent == null)
-            {
-                Transform[] allObjects = FindObjectsOfType<Transform>(true); //true可找到隱藏物件
-                foreach (Transform obj in allObjects)
-                {
-                    if (obj.CompareTag("parent"))
-                    {
-                        _parent = obj.gameObject;
-                        break;
-                    }
-                }
-            }
-
-            //Debug檢查是否成功找到parent
-            if (_parent != null)
-            {
-                _parent.SetActive(false); //確保轉場開始時parent是關閉的
-            }
-            else
-            {
-                Debug.LogError("找不到parent，請確保Tag設為parent");
-            }
         }
 
 
@@ -56,16 +30,6 @@ namespace TransitionScreenPackage
 
         public void OnFinishedHideAnimation()
         {
-            //確保parent物件已找到後才執行
-            if (_parent != null)
-            {
-                _parent.SetActive(true);
-            }
-            else
-            {
-                Debug.LogError("無法開啟parent，因為_parent為 null");
-            }
-
             //確保 Animator 不影響後續操作
             _animator.enabled = false;
 

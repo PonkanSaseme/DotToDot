@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
+using TransitionScreenPackage;
+using TransitionScreenPackage.Demo;
 
 public class GameManager : MonoBehaviour
 {
@@ -13,6 +15,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Transform _edgePrefab;
     [SerializeField] private Transform _parentContainer; // 最上層的父物件，管理所有關卡
     [SerializeField] private InputAction press, screenPos;
+
+    [SerializeField] private GameObject transition; //轉場
+    [SerializeField] private GameObject startScene; //開始畫面
+
+    [SerializeField] private TransitionScreenDemo transDemo;
 
     private bool hasGameStart;
     private bool hasGameFinished;
@@ -27,6 +34,7 @@ public class GameManager : MonoBehaviour
     private Vector3 curScreenPos;
     private bool isPressing = false; // 用來追蹤按壓狀態
 
+
     private List<Vector2Int> directions = new List<Vector2Int>()
     {
         Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right
@@ -36,13 +44,6 @@ public class GameManager : MonoBehaviour
     {
         Instance = this;
         hasGameStart = false;
-    }
-
-    private void Start()
-    {
-        press.Enable();
-        screenPos.Enable();
-        StartGame();
     }
 
     private void OnEnable()
@@ -71,6 +72,7 @@ public class GameManager : MonoBehaviour
 
     private void OnTouchStarted(InputAction.CallbackContext context)
     {
+       // Debug.Log("click");
         if (!_parentContainer.gameObject.activeInHierarchy)
         {
             Debug.LogWarning("❌ 父物件尚未開啟，取消觸控偵測！");
@@ -118,6 +120,7 @@ public class GameManager : MonoBehaviour
 
     private void OnTouchPerformed(InputAction.CallbackContext context)
     {
+        //Debug.Log("Drag");
         curScreenPos = screenPos.ReadValue<Vector2>();
 
         Vector3 worldPos = Camera.main.ScreenToWorldPoint(curScreenPos);
@@ -126,6 +129,7 @@ public class GameManager : MonoBehaviour
 
     private void OnTouchCanceled(InputAction.CallbackContext context)
     {
+        //Debug.Log("cancle");
         isPressing = false;
         if (hasGameStart && !hasGameFinished)
         {
@@ -135,15 +139,21 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
-        //確保 parent 父物件開啟
-        _parentContainer.gameObject.SetActive(true);
-        press.Enable();
-        Initialize();
+        //Initialize();
+        startScene.SetActive(false);
+        transDemo.enabled = true;
+
+        TransitionScreenManager transition = FindObjectOfType<TransitionScreenManager>(); // 找到場景中的 TransitionScreenManager
+        transition.FinishedHideEvent += Initialize;
     }
 
 
     private void Initialize()
     {
+        Debug.Log("Init");
+        //確保 parent 父物件開啟
+        _parentContainer.gameObject.SetActive(true);
+
         hasGameFinished = false;
         hasGameStart = true;
 

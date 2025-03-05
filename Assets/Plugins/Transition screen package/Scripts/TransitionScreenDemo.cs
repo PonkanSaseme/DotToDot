@@ -17,7 +17,7 @@ namespace TransitionScreenPackage.Demo
 
         private void Awake()
         {
-            SpawnSelectedTransitionScreen();
+            
         }
 
         private void SpawnSelectedTransitionScreen()
@@ -49,6 +49,11 @@ namespace TransitionScreenPackage.Demo
             }
         }
 
+        private void OnEnable()
+        {
+            SpawnSelectedTransitionScreen();
+        }
+
         private void OnTransitionScreenRevealed()
         {
             // Start hide animation, after it's fully revealed
@@ -64,8 +69,8 @@ namespace TransitionScreenPackage.Demo
         private void OnValidate()
         {
             // Runs when you change the selected type via Inspector
-            if (Application.isPlaying)
-                SpawnSelectedTransitionScreen();
+            /*if (Application.isPlaying)
+                SpawnSelectedTransitionScreen();*/
         }
     }
 }
