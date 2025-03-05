@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
 
 public class GameManager : MonoBehaviour
 {
@@ -39,11 +40,14 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        press.Enable();
+        screenPos.Enable();
         StartGame();
     }
 
     private void OnEnable()
     {
+        // 訂閱輸入事件
         press.Enable();
         screenPos.Enable();
 
@@ -57,6 +61,7 @@ public class GameManager : MonoBehaviour
 
     private void OnDisable()
     {
+        // 取消訂閱，避免記憶體洩漏
         press.started -= OnTouchStarted;
         press.performed -= OnTouchPerformed;
         press.canceled -= OnTouchCanceled;
@@ -82,6 +87,7 @@ public class GameManager : MonoBehaviour
         //確保startPos在cellsList的範圍內
         if (!IsValid(startPos, currentLevelIndex))
         {
+            Debug.LogWarning($"❌ 無效的起始位置: {startPos}");
             isPressing = false;
             return;
         }
@@ -89,6 +95,7 @@ public class GameManager : MonoBehaviour
         //確保startPos是該Level的StartPosition
         if (startPos != _levels[currentLevelIndex].StartPosition)
         {
+            Debug.LogWarning($"❌ {startPos} 不是起始點 {_levels[currentLevelIndex].StartPosition}");
             isPressing = false;
             return;
         }
@@ -102,6 +109,7 @@ public class GameManager : MonoBehaviour
         {
             Debug.LogError($"❌ 無法填滿格子，cellsList[{currentLevelIndex}] 尚未初始化！");
         }
+
 
         filledPointsList[currentLevelIndex].Clear();
         filledPointsList[currentLevelIndex].Add(startPos);
@@ -129,7 +137,7 @@ public class GameManager : MonoBehaviour
     {
         //確保 parent 父物件開啟
         _parentContainer.gameObject.SetActive(true);
-
+        press.Enable();
         Initialize();
     }
 
@@ -222,7 +230,7 @@ public class GameManager : MonoBehaviour
         if (hasGameFinished || !hasGameStart || !isPressing) return;
 
         Vector3 worldPos = Camera.main.ScreenToWorldPoint(screenPos.ReadValue<Vector2>());
-        endPos = new Vector2Int(Mathf.FloorToInt(worldPos.y), Mathf.FloorToInt(worldPos.x));
+        endPos = new Vector2Int(Mathf.FloorToInt(worldPos.x), Mathf.FloorToInt(worldPos.y));
 
         if (!IsValid(startPos, currentLevelIndex) || !IsValid(endPos, currentLevelIndex))
             return; //先檢查範圍
@@ -446,7 +454,7 @@ public class GameManager : MonoBehaviour
     {
         return IsValid(startPos, currentLevelIndex) &&
                IsValid(endPos, currentLevelIndex) &&
-               directions.Contains(endPos - startPos); //修正方向計算
+               (Mathf.Abs(startPos.x - endPos.x) + Mathf.Abs(startPos.y - endPos.y) == 1);
     }
 
 
