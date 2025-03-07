@@ -83,7 +83,22 @@ public class GameManager : MonoBehaviour
         curScreenPos = screenPos.ReadValue<Vector2>();
         Vector3 worldPos = Camera.main.ScreenToWorldPoint(curScreenPos);
 
-        startPos = new Vector2Int(Mathf.FloorToInt(worldPos.x), Mathf.FloorToInt(worldPos.y));
+        // 🔹 **計算當前關卡的 yOffset**
+        float yOffset = levelParents[currentLevelIndex].position.y;
+
+        // 🔹 **確保 `worldPos` 減去 `yOffset`，取得正確的格子座標**
+        int row = Mathf.FloorToInt(worldPos.y - yOffset);
+        int col = Mathf.FloorToInt(worldPos.x);
+
+        // 🔹 **確保 row 和 col 在合法範圍內**
+        if (row < 0 || col < 0 || row >= _levels[currentLevelIndex].Row || col >= _levels[currentLevelIndex].Col)
+        {
+            Debug.LogError($"❌ 超出陣列範圍: row={row}, col={col}, Level Size=({_levels[currentLevelIndex].Row}, {_levels[currentLevelIndex].Col})");
+            isPressing = false;
+            return;
+        }
+        startPos = new Vector2Int(row, col);
+        //startPos = new Vector2Int(Mathf.FloorToInt(worldPos.x), Mathf.FloorToInt(worldPos.y));
         endPos = startPos;
 
         //確保startPos在cellsList的範圍內
