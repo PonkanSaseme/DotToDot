@@ -6,7 +6,7 @@ public class Level : ScriptableObject
 {
     public int Row;
     public int Col;
-    [HideInInspector,Tooltip("使用一維陣列來存格子資訊，索引計算方式：row * Col + col")]
+    [HideInInspector, Tooltip("使用一維陣列來存格子資訊，索引計算方式：row * Col + col")]
     public List<bool> GridData = new List<bool>();
 
     [Tooltip("範圍:0~Row-1")]
