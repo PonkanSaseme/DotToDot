@@ -12,7 +12,6 @@ public class LevelManager
     private List<Transform> _edges;
     private Transform _levelParent;
     private Transform _edgePrefab;
-    private int currentLevelIndex = 0; // 追蹤當前操作的 Level
 
     public LevelManager(Level level, Cell cellPrefab, Transform edgePrefab, Transform parentContainer)
     {
@@ -20,12 +19,6 @@ public class LevelManager
         _edgePrefab = edgePrefab;
         _filledPoints = new List<Vector2Int>();
         _edges = new List<Transform>();
-
-        if (level == null)
-        {
-            Debug.LogError("Level 為 null，無法初始化 LevelManager！");
-            return;
-        }
 
         // 初始化父物件
         _levelParent = new GameObject("Level").transform;
@@ -66,14 +59,7 @@ public class LevelManager
 
     public void HandleTouchStart(Vector2Int startPos)
     {
-        if (_cells == null)
-        {
-            Debug.LogError("_cells 陣列尚未初始化！");
-            return;
-        }
-
-
-        if (!IsValid(startPos,currentLevelIndex))
+        if (!IsValid(startPos))
         {
             Debug.LogWarning($"無效的起始位置: {startPos}");
             return;
@@ -101,187 +87,45 @@ public class LevelManager
 
     public void HandleTouchMove(Vector2Int endPos)
     {
-        if (_cells == null)
+        if (!IsValid(endPos) || _filledPoints.Count == 0)
         {
-            Debug.LogError("_cells 陣列尚未初始化！");
-            return;
-        }
-
-        if (!IsValid(endPos, currentLevelIndex) || _filledPoints.Count == 0)
-        {
-            Debug.LogWarning($"無效的移動目標: {endPos}");
             return;
         }
 
         Vector2Int startPos = _filledPoints[_filledPoints.Count - 1];
-        Debug.Log($"嘗試畫線: {startPos} -> {endPos}");
+        Debug.Log($"StartPos: {startPos}, EndPos: {endPos}");
 
         if (!IsNeighbour(startPos, endPos))
         {
-            Debug.LogWarning("這兩個點不是相鄰的！");
+            Debug.Log("not Neighbour");
             return;
         }
-        Debug.Log("這兩個點是相鄰的，開始畫線");
 
-        // 確保 _cells[endPos] 不是 null
-        if (_cells[endPos.x, endPos.y] == null)
-        {
-            Debug.LogError($"_cells[{endPos.x}, {endPos.y}] 是 null，無法畫線！");
-            return;
-        }
-        // **繪製線條並標記 Cell**
-        _filledPoints.Add(endPos);
-        _cells[endPos.x, endPos.y].Add();  // 變更顏色
-        SpawnEdge(startPos, endPos);
-        Debug.Log($"已成功畫線 {startPos} -> {endPos}");
-
-        if (_filledPoints.Count == 1)
+        if (!_cells[endPos.x, endPos.y].Filled)
         {
             _filledPoints.Add(endPos);
             _cells[endPos.x, endPos.y].Add();
             SpawnEdge(startPos, endPos);
         }
-        else if (AddEmpty(startPos, endPos))
-        {
-            _filledPoints.Add(startPos);
-            _filledPoints.Add(endPos);
-            _cells[startPos.x, startPos.y].Add();
-            _cells[endPos.x, endPos.y].Add();
-            SpawnEdge(startPos, endPos);
-        }
-        else if (AddToEnd(startPos, endPos))
-        {
-            _filledPoints.Add(endPos);
-            _cells[endPos.x, endPos.y].Add();
-            SpawnEdge(startPos, endPos);
-        }
-        else if (AddToStart(startPos, endPos))
-        {
-            _filledPoints.Insert(0, endPos);
-            _cells[endPos.x, endPos.y].Add();
-            SpawnEdge(startPos, endPos, true);
-        }
-        else if (RemoveFromEnd(startPos, endPos))
-        {
-            RemoveLastEdge();
-        }
-        else if (RemoveFromStart(startPos, endPos))
-        {
-            RemoveFirstEdge();
-        }
 
-        RemoveEmpty();
         CheckWin();
+    }
+
+    private bool IsValid(Vector2Int pos)
+    {
+        if (pos.x < 0 || pos.y < 0 || pos.x >= _level.Row || pos.y >= _level.Col)
+            return false;
+
+        if (!_level.GetCell(pos.x, pos.y))
+            return false;
+
+        return true;
     }
 
     private bool IsNeighbour(Vector2Int startPos, Vector2Int endPos)
     {
-        return IsValid(startPos, currentLevelIndex) &&
-               IsValid(endPos, currentLevelIndex) &&
-               (Mathf.Abs(startPos.x - endPos.x) + Mathf.Abs(startPos.y - endPos.y) == 1);
-    }
-    private bool IsValid(Vector2Int pos, int levelIndex)
-    {
-        if (levelIndex < 0 || levelIndex >= _level.Row) return false; //檢查levelIndex
-        if (pos.x < 0 || pos.y < 0 || pos.x >= _level.Row || pos.y >= _level.Col)
-            return false;
-
-        if (!_level.GetCell(pos.x, pos.y)) //檢查是否為障礙物
-            return false;
-
-        return true;
-    }
-
-
-    private bool AddEmpty(Vector2Int startPos, Vector2Int endPos)
-    {
-        if (!IsValid(startPos, currentLevelIndex) || !IsValid(endPos, currentLevelIndex))
-            return false;
-
-        if (_edges.Count > 0) return false;
-        if (_cells[startPos.x, startPos.y].Filled) return false;
-        if (_cells[endPos.x, endPos.y].Filled) return false;
-
-        if (!_level.GetCell(startPos.x, startPos.y)) return false;
-        if (!_level.GetCell(endPos.x, endPos.y)) return false;
-
-        return true;
-    }
-
-    private bool AddToEnd(Vector2Int startPos, Vector2Int endPos)
-    {
-        if (_filledPoints.Count < 2) return false;
-        Vector2Int pos = _filledPoints[_filledPoints.Count - 1];
-        if (_cells[startPos.x, startPos.y] != _cells[pos.x, pos.y]) return false;
-        if (_cells[endPos.x, endPos.y].Filled) return false;
-        if (!_level.GetCell(endPos.x, endPos.y)) return false;
-        return true;
-    }
-
-    private bool AddToStart(Vector2Int startPos, Vector2Int endPos)
-    {
-        if (_filledPoints.Count < 2) return false;
-
-        Vector2Int pos = _filledPoints[0];
-        if (_cells[startPos.x, startPos.y] != _cells[pos.x, pos.y]) return false;
-        if (_cells[endPos.x, endPos.y].Filled) return false;
-        if (!_level.GetCell(endPos.x, endPos.y)) return false;
-        return true;
-    }
-
-    private bool RemoveFromEnd(Vector2Int startPos, Vector2Int endPos)
-    {
-        if (_filledPoints.Count < 2) return false;
-
-        Vector2Int pos = _filledPoints[_filledPoints.Count - 1];
-        Cell lastCell = _cells[pos.x, pos.y];
-
-        if (_cells[startPos.x, startPos.y] != lastCell) return false;
-
-        pos = _filledPoints[_filledPoints.Count - 2];
-        lastCell = _cells[pos.x, pos.y];
-
-        if (_cells[endPos.x, endPos.y] != lastCell) return false;
-
-        Transform removeEdge = _edges[_edges.Count - 1];
-        _edges.RemoveAt(_edges.Count - 1);
-        UnityEngine.Object.Destroy(removeEdge.gameObject);
-
-        _filledPoints.RemoveAt(_filledPoints.Count - 1);
-        _cells[startPos.x, startPos.y].Remove();
-
-        return true;
-    }
-
-    private bool RemoveFromStart(Vector2Int startPos, Vector2Int endPos)
-    {
-        if (_filledPoints.Count < 2) return false;
-
-        Vector2Int pos = _filledPoints[0];
-        Cell firstCell = _cells[pos.x, pos.y];
-
-        if (_cells[startPos.x, startPos.y] != firstCell) return false;
-
-        pos = _filledPoints[1];
-        firstCell = _cells[pos.x, pos.y];
-
-        if (_cells[endPos.x, endPos.y] != firstCell) return false;
-
-        Transform removeEdge = _edges[0];
-        _edges.RemoveAt(0);
-        UnityEngine.Object.Destroy(removeEdge.gameObject);
-
-        _filledPoints.RemoveAt(0);
-        _cells[startPos.x, startPos.y].Remove();
-
-        return true;
-    }
-
-    private void RemoveEmpty()
-    {
-        if (_filledPoints.Count != 1) return;
-        _cells[_filledPoints[0].x, _filledPoints[0].y].Remove();
-        _filledPoints.RemoveAt(0);
+        // 曼哈頓距離為 1 表示這兩個格子是相鄰的
+        return Mathf.Abs(startPos.x - endPos.x) + Mathf.Abs(startPos.y - endPos.y) == 1;
     }
 
     private void SpawnEdge(Vector2Int start, Vector2Int end, bool insertAtStart = false)
@@ -296,12 +140,14 @@ public class LevelManager
 
         float yOffset = _levelParent.position.y;
 
+        // 確保生成的邊線在格子之間的正中間
         edge.transform.position = new Vector3(
-            start.y * 0.5f + 0.5f + end.y * 0.5f,
-            start.x * 0.5f + 0.5f + end.x * 0.5f + yOffset,
+            (start.y + end.y) / 2f + 0.5f,
+            (start.x + end.x) / 2f + 0.5f + yOffset,
             0f
         );
 
+        // 判斷邊線是水平還是垂直，並進行旋轉
         bool horizontal = (end.y - start.y) != 0;
         edge.transform.eulerAngles = new Vector3(0, 0, horizontal ? 90f : 0);
 
@@ -347,6 +193,7 @@ public class LevelManager
             _cells[firstPos.x, firstPos.y].Remove();
         }
     }
+
     public Vector3 GetLevelPosition()
     {
         return _levelParent.position;

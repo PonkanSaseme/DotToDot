@@ -101,19 +101,15 @@ public class GameManager : MonoBehaviour
 
         //float yOffset = _levelManager.GetLevelPosition().y;
         //endPos = new Vector2Int(Mathf.FloorToInt(worldPos.y - yOffset), Mathf.FloorToInt(worldPos.x));
-      
+
 
 
     }
 
     private void OnTouchCanceled(InputAction.CallbackContext context)
     {
-        // Debug.Log("cancle");
         isPressing = false;
-        if (hasGameStart && !hasGameFinished)
-        {
-            StartCoroutine(ClearData());
-        }
+        StartCoroutine(DelayedClear());
     }
 
     public void StartGame()
@@ -130,6 +126,11 @@ public class GameManager : MonoBehaviour
         Debug.Log("Init");
         // 確保 parent 父物件開啟
         _parentContainer.gameObject.SetActive(true);
+        if (_levelManager != null)
+        {
+            Debug.LogWarning("_levelManager 已經初始化，清除舊關卡");
+            _levelManager.CleanUp();
+        }
 
         hasGameFinished = false;
         hasGameStart = true;
@@ -156,11 +157,18 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (_levelManager != null&& isPressing && hasGameStart)
+        if (_levelManager != null && isPressing && hasGameStart)
         {
-            Debug.Log($"Touch Performed at: {endPos}");
             Vector3 worldPos = Camera.main.ScreenToWorldPoint(screenPos.ReadValue<Vector2>());
-            endPos = new Vector2Int(Mathf.FloorToInt(worldPos.x), Mathf.FloorToInt(worldPos.y));
+
+            // **修正座標轉換，減去 level.Position.y**
+            float yOffset = _levelManager.GetLevelPosition().y;
+            endPos = new Vector2Int(
+                Mathf.FloorToInt(worldPos.y - yOffset), // Y 軸對應 Row
+                Mathf.FloorToInt(worldPos.x) // X 軸對應 Col
+            );
+
+            Debug.Log($"滑鼠移動到: {endPos}");
             _levelManager.HandleTouchMove(endPos);
         }
     }
@@ -189,6 +197,15 @@ public class GameManager : MonoBehaviour
         LoadLevel(currentLevelIndex);
     }
 
+    private IEnumerator DelayedClear()
+    {
+        yield return new WaitForEndOfFrame();  // 等待一幀
+        if (!isPressing)
+        {
+            Debug.Log("清除畫面");
+            StartCoroutine(ClearData());
+        }
+    }
     private void HandleLevelComplete()
     {
         Debug.Log("Level Complete!");

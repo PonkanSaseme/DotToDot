@@ -778,6 +778,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _animator: {fileID: 0}
+  transObj: {fileID: 1037066609}
 --- !u!1 &1338197953
 GameObject:
   m_ObjectHideFlags: 0

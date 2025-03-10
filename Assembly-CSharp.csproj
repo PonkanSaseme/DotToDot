@@ -76,6 +76,7 @@
     <Compile Include="Assets\Scripts\Common\Singleton.cs" />
     <Compile Include="Assets\Scripts\Drawing\PointerInput.cs" />
     <Compile Include="Assets\Demo\Scripts\Swiping\TrashType.cs" />
+    <Compile Include="Assets\Scripts\LevelManager.cs" />
     <Compile Include="Assets\Demo\Scripts\Common\SceneLoadButton.cs" />
     <Compile Include="Assets\Demo\Scripts\Swiping\SwipingController.cs" />
     <Compile Include="Assets\Samples\Input System\1.4.4\Custom Binding Composite\CustomComposite.cs" />
@@ -102,7 +103,6 @@
     <Compile Include="Assets\Demo\Scripts\Menu\LevelSelectScreen.cs" />
     <Compile Include="Assets\Demo\Scripts\Drawing\DrawingLine.cs" />
     <Compile Include="Assets\Samples\Input System\1.4.4\Custom Device Usages\CustomDeviceUsages.cs" />
-    <Compile Include="Assets\Scripts\LevelManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
