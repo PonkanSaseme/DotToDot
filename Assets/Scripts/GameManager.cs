@@ -20,6 +20,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private TransitionScreenDemo transDemo;
 
+    private bool isCameraMoving = false; //確保移動過程中不會打斷
+
     private bool hasGameStart;
     private bool hasGameFinished;
 
@@ -78,7 +80,6 @@ public class GameManager : MonoBehaviour
         // 修正座標計算，使其準確地對應到格子索引
         float yOffset = _levelManager.GetLevelPosition().y;
         startPos = new Vector2Int(Mathf.FloorToInt(worldPos.y), Mathf.FloorToInt(worldPos.x)); // 修正 x 和 y 軸
-        Debug.Log($"Touch Started at: {startPos}");
         _levelManager.HandleTouchStart(startPos);
     }
 
@@ -89,20 +90,8 @@ public class GameManager : MonoBehaviour
         // 確保 _levelManager 已經被初始化
         if (_levelManager == null)
         {
-            Debug.LogWarning("LevelManager 尚未被初始化！");
             return;
         }
-
-        //curScreenPos = screenPos.ReadValue<Vector2>();
-        //Vector3 worldPos = Camera.main.ScreenToWorldPoint(curScreenPos);
-        //worldPos.z = 0;  // 確保 z 軸為 0
-
-        // 修正座標計算，使其準確地對應到格子索引
-
-        //float yOffset = _levelManager.GetLevelPosition().y;
-        //endPos = new Vector2Int(Mathf.FloorToInt(worldPos.y - yOffset), Mathf.FloorToInt(worldPos.x));
-
-
 
     }
 
@@ -128,7 +117,6 @@ public class GameManager : MonoBehaviour
         _parentContainer.gameObject.SetActive(true);
         if (_levelManager != null)
         {
-            Debug.LogWarning("_levelManager 已經初始化，清除舊關卡");
             _levelManager.CleanUp();
         }
 
@@ -168,7 +156,6 @@ public class GameManager : MonoBehaviour
                 Mathf.FloorToInt(worldPos.x) // X 軸對應 Col
             );
 
-            Debug.Log($"滑鼠移動到: {endPos}");
             _levelManager.HandleTouchMove(endPos);
         }
     }
@@ -202,7 +189,6 @@ public class GameManager : MonoBehaviour
         yield return new WaitForEndOfFrame();  // 等待一幀
         if (!isPressing)
         {
-            Debug.Log("清除畫面");
             StartCoroutine(ClearData());
         }
     }
@@ -214,7 +200,8 @@ public class GameManager : MonoBehaviour
         if (currentLevelIndex + 1 < _levels.Count)
         {
             currentLevelIndex++;
-            LoadLevel(currentLevelIndex);
+            StartCoroutine(MoveCameraToNextLevel()); //**確保攝影機移動**
+            StartCoroutine(LoadNextLevelAfterDelay()); //**等待攝影機移動完成後載入**
         }
         else
         {
@@ -222,4 +209,42 @@ public class GameManager : MonoBehaviour
             // 可以在這裡添加通關後的處理邏輯
         }
     }
+
+    // **延遲載入下一關，確保移動過程不會瞬間跳過**
+    private IEnumerator LoadNextLevelAfterDelay()
+    {
+        yield return new WaitForSeconds(3.5f); //**等待攝影機移動 + 停頓時間**
+        LoadLevel(currentLevelIndex);
+    }
+
+    private IEnumerator MoveCameraToNextLevel()
+    {
+        if (currentLevelIndex + 1 >= _levels.Count || isCameraMoving)
+            yield break; //**如果已經是最後一關，或攝影機正在移動，就不執行**
+
+        isCameraMoving = true; //**標記攝影機正在移動**
+
+        Level nextLevel = _levels[currentLevelIndex + 1];
+        float targetY = nextLevel.Position.y + nextLevel.Row / 2f; //**確保新關卡在畫面正中央**
+
+        float duration = 3f; //**延長時間，讓移動更平滑**
+        float elapsedTime = 0f;
+        Vector3 startPosition = Camera.main.transform.position;
+        Vector3 targetPosition = new Vector3(startPosition.x, targetY, startPosition.z);
+
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            float t = Mathf.SmoothStep(0, 1, elapsedTime / duration); //**使用 SmoothStep 確保平滑**
+            Camera.main.transform.position = Vector3.Lerp(startPosition, targetPosition, t);
+            yield return null;
+        }
+
+        Camera.main.transform.position = targetPosition; //**確保最終位置正確**
+
+        yield return new WaitForSeconds(0.5f); //**等待 0.5 秒，確保畫面不會馬上切換**
+
+        isCameraMoving = false; //**攝影機移動結束**
+    }
+
 }

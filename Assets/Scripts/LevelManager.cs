@@ -59,17 +59,8 @@ public class LevelManager
 
     public void HandleTouchStart(Vector2Int startPos)
     {
-        if (!IsValid(startPos))
-        {
-            Debug.LogWarning($"無效的起始位置: {startPos}");
-            return;
-        }
-
-        if (startPos != _level.StartPosition)
-        {
-            Debug.LogWarning($"{startPos} 不是起始點 {_level.StartPosition}");
-            return;
-        }
+        if (!IsValid(startPos)) return;
+        if (startPos != _level.StartPosition) return;
 
         if (_cells[startPos.x, startPos.y] is Cell cell)
         {
@@ -77,7 +68,6 @@ public class LevelManager
         }
         else
         {
-            Debug.LogError($"無法填滿格子，cells 尚未初始化！");
             return;
         }
 
@@ -93,11 +83,9 @@ public class LevelManager
         }
 
         Vector2Int startPos = _filledPoints[_filledPoints.Count - 1];
-        Debug.Log($"StartPos: {startPos}, EndPos: {endPos}");
 
         if (!IsNeighbour(startPos, endPos))
         {
-            Debug.Log("not Neighbour");
             return;
         }
 
@@ -130,8 +118,6 @@ public class LevelManager
 
     private void SpawnEdge(Vector2Int start, Vector2Int end, bool insertAtStart = false)
     {
-        Debug.Log($"嘗試生成邊線: {start} -> {end}");
-
         Transform edge = UnityEngine.Object.Instantiate(_edgePrefab, _levelParent);
         if (insertAtStart)
             _edges.Insert(0, edge);
@@ -151,7 +137,6 @@ public class LevelManager
         bool horizontal = (end.y - start.y) != 0;
         edge.transform.eulerAngles = new Vector3(0, 0, horizontal ? 90f : 0);
 
-        Debug.Log($"已成功生成邊線 {start} -> {end}");
     }
 
     private void RemoveLastEdge()

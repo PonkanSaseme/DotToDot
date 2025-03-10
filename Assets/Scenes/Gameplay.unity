@@ -464,6 +464,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _levels:
   - {fileID: 11400000, guid: 759092638d4f45e4992e0078e9bec878, type: 2}
+  - {fileID: 11400000, guid: 0c3e9e06fb9d8914482a0144756ff046, type: 2}
+  - {fileID: 11400000, guid: 17a28907ad38afa4ebdf9bbd0bf49e88, type: 2}
   _cellPrefab: {fileID: 5177507590486486883, guid: bc92bf9b01c0ddb4eb9409e6cb408d8c, type: 3}
   _edgePrefab: {fileID: 5447850150516141073, guid: c8c8fa5df81f1e046900d5cbe3942da1, type: 3}
   _parentContainer: {fileID: 1338197954}
@@ -778,7 +780,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _animator: {fileID: 0}
-  transObj: {fileID: 1037066609}
 --- !u!1 &1338197953
 GameObject:
   m_ObjectHideFlags: 0

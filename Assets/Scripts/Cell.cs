@@ -23,7 +23,6 @@ public class Cell : MonoBehaviour
 
     public void Add()
     {
-        Debug.Log($"Cell({this.transform.position}) 被填滿！");
         Filled = true;
         _cellRenderer.color = _filledColor;
     }
