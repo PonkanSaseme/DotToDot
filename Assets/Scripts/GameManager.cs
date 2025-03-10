@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private GameObject transition; //轉場
     [SerializeField] private GameObject startScene; //開始畫面
+    [SerializeField] private GameObject startIcon; // **拖入動畫 Image**
 
     [SerializeField] private TransitionScreenDemo transDemo;
 
@@ -78,7 +79,6 @@ public class GameManager : MonoBehaviour
         worldPos.z = 0;  // 確保 z 軸為 0
 
         // 修正座標計算，使其準確地對應到格子索引
-        float yOffset = _levelManager.GetLevelPosition().y;
         startPos = new Vector2Int(Mathf.FloorToInt(worldPos.y), Mathf.FloorToInt(worldPos.x)); // 修正 x 和 y 軸
         _levelManager.HandleTouchStart(startPos);
     }
@@ -92,7 +92,6 @@ public class GameManager : MonoBehaviour
         {
             return;
         }
-
     }
 
     private void OnTouchCanceled(InputAction.CallbackContext context)
@@ -106,7 +105,12 @@ public class GameManager : MonoBehaviour
         startScene.SetActive(false);
         transDemo.enabled = true;
 
-        TransitionScreenManager transition = FindObjectOfType<TransitionScreenManager>(); // 找到場景中的 TransitionScreenManager
+        TransitionScreenManager transition = FindObjectOfType<TransitionScreenManager>();
+
+        // 確保不重複訂閱事件
+        transition.FinishedHideEvent -= OnTransitionFinished;
+        transition.FinishedHideEvent += OnTransitionFinished;
+
         transition.FinishedHideEvent += Initialize;
     }
 
@@ -134,13 +138,15 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-
-        ClearPreviousLevel();
+        ClearPreviousLevel(); // **清理舊關卡**
 
         Level level = _levels[levelIndex];
         _levelManager = new LevelManager(level, _cellPrefab, _edgePrefab, _parentContainer);
 
         _levelManager.OnLevelComplete += HandleLevelComplete;
+
+        // **等待轉場動畫結束後再顯示 `startIcon`**
+        StartCoroutine(WaitForTransitionToEnd());
     }
 
     private void Update()
@@ -149,14 +155,24 @@ public class GameManager : MonoBehaviour
         {
             Vector3 worldPos = Camera.main.ScreenToWorldPoint(screenPos.ReadValue<Vector2>());
 
-            // **修正座標轉換，減去 level.Position.y**
-            float yOffset = _levelManager.GetLevelPosition().y;
+            // **修正座標轉換**
             endPos = new Vector2Int(
-                Mathf.FloorToInt(worldPos.y - yOffset), // Y 軸對應 Row
+                Mathf.FloorToInt(worldPos.y), // Y 軸對應 Row
                 Mathf.FloorToInt(worldPos.x) // X 軸對應 Col
             );
 
             _levelManager.HandleTouchMove(endPos);
+        }
+    }
+
+    private void OnTransitionFinished()
+    {
+        Debug.Log("轉場動畫結束，檢查是否顯示 Start Icon");
+
+        // **確保轉場動畫完成後才顯示**
+        if (!transDemo.IsTransitioning && _levelManager != null)
+        {
+            ShowStartIcon();
         }
     }
 
@@ -176,6 +192,7 @@ public class GameManager : MonoBehaviour
         if (_levelManager != null)
         {
             _levelManager.OnLevelComplete -= HandleLevelComplete;
+            HideStartIcon(); // **清除 Start Icon**
             _levelManager.CleanUp();
             _levelManager = null;
         }
@@ -192,6 +209,7 @@ public class GameManager : MonoBehaviour
             StartCoroutine(ClearData());
         }
     }
+
     private void HandleLevelComplete()
     {
         Debug.Log("Level Complete!");
@@ -200,8 +218,8 @@ public class GameManager : MonoBehaviour
         if (currentLevelIndex + 1 < _levels.Count)
         {
             currentLevelIndex++;
-            StartCoroutine(MoveCameraToNextLevel()); //**確保攝影機移動**
-            StartCoroutine(LoadNextLevelAfterDelay()); //**等待攝影機移動完成後載入**
+            StartCoroutine(MoveCameraToNextLevel()); // **確保攝影機移動**
+            StartCoroutine(LoadNextLevelAfterDelay()); // **等待攝影機移動完成後載入**
         }
         else
         {
@@ -213,21 +231,21 @@ public class GameManager : MonoBehaviour
     // **延遲載入下一關，確保移動過程不會瞬間跳過**
     private IEnumerator LoadNextLevelAfterDelay()
     {
-        yield return new WaitForSeconds(3.5f); //**等待攝影機移動 + 停頓時間**
+        yield return new WaitForSeconds(3.5f); // **等待攝影機移動 + 停頓時間**
         LoadLevel(currentLevelIndex);
     }
 
     private IEnumerator MoveCameraToNextLevel()
     {
         if (currentLevelIndex + 1 >= _levels.Count || isCameraMoving)
-            yield break; //**如果已經是最後一關，或攝影機正在移動，就不執行**
+            yield break; // **如果已經是最後一關，或攝影機正在移動，就不執行**
 
-        isCameraMoving = true; //**標記攝影機正在移動**
+        isCameraMoving = true; // **標記攝影機正在移動**
 
         Level nextLevel = _levels[currentLevelIndex + 1];
-        float targetY = nextLevel.Position.y + nextLevel.Row / 2f; //**確保新關卡在畫面正中央**
+        float targetY = nextLevel.Position.y + nextLevel.Row / 2f; // **確保新關卡在畫面正中央**
 
-        float duration = 3f; //**延長時間，讓移動更平滑**
+        float duration = 3f; // **延長時間，讓移動更平滑**
         float elapsedTime = 0f;
         Vector3 startPosition = Camera.main.transform.position;
         Vector3 targetPosition = new Vector3(startPosition.x, targetY, startPosition.z);
@@ -235,16 +253,50 @@ public class GameManager : MonoBehaviour
         while (elapsedTime < duration)
         {
             elapsedTime += Time.deltaTime;
-            float t = Mathf.SmoothStep(0, 1, elapsedTime / duration); //**使用 SmoothStep 確保平滑**
+            float t = Mathf.SmoothStep(0, 1, elapsedTime / duration); // **使用 SmoothStep 確保平滑**
             Camera.main.transform.position = Vector3.Lerp(startPosition, targetPosition, t);
             yield return null;
         }
 
-        Camera.main.transform.position = targetPosition; //**確保最終位置正確**
+        Camera.main.transform.position = targetPosition; // **確保最終位置正確**
 
-        yield return new WaitForSeconds(0.5f); //**等待 0.5 秒，確保畫面不會馬上切換**
+        yield return new WaitForSeconds(0.5f); // **等待 0.5 秒，確保畫面不會馬上切換**
 
-        isCameraMoving = false; //**攝影機移動結束**
+        isCameraMoving = false; // **攝影機移動結束**
     }
 
+    private IEnumerator WaitForTransitionToEnd()
+    {
+        if (transDemo != null)
+        {
+            while (transDemo.IsTransitioning) // **確保轉場動畫正在播放**
+            {
+                yield return null; // 等待下一幀
+            }
+        }
+
+        // **轉場動畫結束後顯示 Start Icon**
+        if (_levelManager != null)
+        {
+            ShowStartIcon();
+        }
+    }
+
+    private void ShowStartIcon()
+    {
+        if (startIcon != null && _levelManager != null)
+        {
+            Vector3 startPosition = _levelManager.GetStartIconPosition();
+            startIcon.transform.position = startPosition;
+            startIcon.SetActive(true);
+        }
+    }
+
+    private void HideStartIcon()
+    {
+        if (startIcon != null)
+        {
+            startIcon.SetActive(false);
+        }
+    }
 }

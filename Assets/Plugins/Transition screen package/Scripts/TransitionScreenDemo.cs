@@ -8,17 +8,15 @@ namespace TransitionScreenPackage.Demo
     {
         [SerializeField] private TransitionScreenType _selectedType;
         [SerializeField] private TransitionScreenVersion _selectedVersion;
-        
+
         [Space]
         [Header("DO NOT CHANGE THESE!")]
         [SerializeField] private List<TransitionScreenObject> _transitionScreens;
 
         private TransitionScreenManager _currentTransitionScreen;
 
-        private void Awake()
-        {
-            
-        }
+        //新增IsTransitioning 屬性，預設為 false
+        public bool IsTransitioning { get; private set; } = false;
 
         private void SpawnSelectedTransitionScreen()
         {
@@ -26,23 +24,26 @@ namespace TransitionScreenPackage.Demo
             {
                 if (transition.Type.Equals(_selectedType))
                 {
-                    // Clear previous data (if there was any)
+                    // 清除舊的 TransitionScreen
                     if (_currentTransitionScreen != null)
                     {
                         _currentTransitionScreen.FinishedRevealEvent -= OnTransitionScreenRevealed;
                         _currentTransitionScreen.FinishedHideEvent -= OnTransitionScreenHidden;
                         Destroy(_currentTransitionScreen.gameObject);
                     }
-                    
-                    // Instantiate new transition screen prefab
+
+                    //轉場開始，設為 true
+                    IsTransitioning = true;
+
+                    // 產生新的 TransitionScreen
                     GameObject instantiatedTransitionScreen = Instantiate(transition.GetVersion(_selectedVersion).PrefabObject, transform);
-                    
-                    // Subscribe to it's events
                     _currentTransitionScreen = instantiatedTransitionScreen.GetComponent<TransitionScreenManager>();
+
+                    // 訂閱事件
                     _currentTransitionScreen.FinishedRevealEvent += OnTransitionScreenRevealed;
                     _currentTransitionScreen.FinishedHideEvent += OnTransitionScreenHidden;
-                    
-                    // Reveal it
+
+                    //啟動 Reveal (轉場動畫開始)
                     _currentTransitionScreen.Reveal();
                     break;
                 }
@@ -56,22 +57,14 @@ namespace TransitionScreenPackage.Demo
 
         private void OnTransitionScreenRevealed()
         {
-            // Start hide animation, after it's fully revealed
+            //轉場 Reveal 動畫結束，開始 Hide (遮罩隱藏)
             _currentTransitionScreen.Hide();
         }
-        
+
         private void OnTransitionScreenHidden()
         {
-            // Start reveal animation, after it's fully hidden
-            _currentTransitionScreen.Reveal();
-        }
-
-        private void OnValidate()
-        {
-            // Runs when you change the selected type via Inspector
-            /*if (Application.isPlaying)
-                SpawnSelectedTransitionScreen();*/
+            //轉場 Hide 動畫結束，標記為false，動畫已完成
+            IsTransitioning = false;
         }
     }
 }
-

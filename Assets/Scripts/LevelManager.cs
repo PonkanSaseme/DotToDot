@@ -136,7 +136,6 @@ public class LevelManager
         // 判斷邊線是水平還是垂直，並進行旋轉
         bool horizontal = (end.y - start.y) != 0;
         edge.transform.eulerAngles = new Vector3(0, 0, horizontal ? 90f : 0);
-
     }
 
     private void RemoveLastEdge()
@@ -182,6 +181,15 @@ public class LevelManager
     public Vector3 GetLevelPosition()
     {
         return _levelParent.position;
+    }
+
+    public Vector3 GetStartIconPosition()
+    {
+        return new Vector3(
+            _level.StartPosition.y + 0.5f, // X 軸 (Col)
+            _level.StartPosition.x + 0.5f, // Y 軸 (Row)
+            0
+        );
     }
 
     private void CheckWin()
