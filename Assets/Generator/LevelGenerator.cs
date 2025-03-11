@@ -33,7 +33,7 @@ public class LevelGenerator : MonoBehaviour
     {
         int totalCells = _row * _col;
 
-        // ✅ **如果 `GridData` 已經初始化且大小正確，則不做任何修改**
+        //**如果GridData已經初始化且大小正確，則不做任何修改**
         if (_level.GridData != null && _level.GridData.Count == totalCells)
             return;
 
@@ -45,15 +45,19 @@ public class LevelGenerator : MonoBehaviour
             _level.GridData = new List<bool>();
         }
 
-        // ✅ **確保 `GridData` 長度符合 `_row * _col`**
+        //**確保GridData長度符合_row * _col`**
         while (_level.GridData.Count < totalCells)
             _level.GridData.Add(false);
         while (_level.GridData.Count > totalCells)
             _level.GridData.RemoveAt(_level.GridData.Count - 1);
 
-        // ✅ **確保 ScriptableObject 被標記為已修改**
+
+#if UNITY_EDITOR
+
+        //**確保 ScriptableObject 被標記為已修改**
         EditorUtility.SetDirty(_level);
         AssetDatabase.SaveAssets();
+#endif
     }
 
 
@@ -87,22 +91,24 @@ public class LevelGenerator : MonoBehaviour
 
             if (!IsValid(startPos)) return;
 
-            int index = startPos.x * _col + startPos.y; // ✅ 計算一維索引
+            int index = startPos.x * _col + startPos.y; //計算一維索引
 
             bool blocked = cells[startPos.x, startPos.y].Blocked;
             bool filled = cells[startPos.x, startPos.y].Filled;
 
             if (!blocked && filled) return;
 
-            // ✅ **切換格子狀態**
+            //**切換格子狀態**
             cells[startPos.x, startPos.y].ChangeState();
-            _level.GridData[index] = !blocked; // ✅ **更新 `GridData`**
+            _level.GridData[index] = !blocked; //**更新GridData`**
 
-            // ✅ **確保 ScriptableObject 變更會儲存**
+            //**確保 ScriptableObject 變更會儲存**
+#if UNITY_EDITOR
             EditorUtility.SetDirty(_level);
             AssetDatabase.SaveAssets();
+#endif
         }
-
+#if UNITY_EDITOR
         if (Input.GetMouseButtonDown(0))
         {
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -180,6 +186,7 @@ public class LevelGenerator : MonoBehaviour
             RemoveEmpty();
             startPos = endPos;
         }
+#endif
     }
 
     private bool AddEmpty()
