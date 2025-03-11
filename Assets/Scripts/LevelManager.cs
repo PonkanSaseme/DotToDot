@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using UnityEngine;
 using System;
-
+using UnityEngine;
+using System.Collections;
 public class LevelManager
 {
     public event Action OnLevelComplete;
@@ -98,6 +98,31 @@ public class LevelManager
 
         CheckWin();
     }
+
+    public void FadeInLevel(float duration = 1f)
+    {
+        _levelParent.gameObject.SetActive(true); // **確保關卡物件被啟用**
+
+        SpriteRenderer[] sprites = _levelParent.GetComponentsInChildren<SpriteRenderer>();
+        foreach (var sprite in sprites)
+        {
+            Color tempColor = sprite.color;
+            tempColor.a = 0; // **設為透明**
+            sprite.color = tempColor;
+        }
+
+        // **請 GameManager 來執行 Coroutine**
+        GameManager.Instance.StartCoroutine(GameManager.Instance.FadeInCoroutine(sprites, duration));
+}
+
+    public void FadeInLevel()
+    {
+        SpriteRenderer[] spriteRenderers = _levelParent.GetComponentsInChildren<SpriteRenderer>();
+        GameManager.Instance.StartCoroutine(GameManager.Instance.FadeInCoroutine(spriteRenderers, 2f));
+    }
+
+
+
 
     private bool IsValid(Vector2Int pos)
     {

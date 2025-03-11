@@ -49,4 +49,10 @@ public class Cell : MonoBehaviour
     {
         _cellRenderer.color = _endColor; // 或者你可以在 Inspector 內設定自訂顏色
     }
+
+    public void SetBlockedColorAlpha(float alpha)
+    {
+        _blockedColor.a = alpha; // **設定透明度**
+        _cellRenderer.color = _blockedColor; // **更新顏色**
+    }
 }

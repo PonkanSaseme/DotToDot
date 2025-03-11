@@ -145,6 +145,8 @@ public class GameManager : MonoBehaviour
 
         _levelManager.OnLevelComplete += HandleLevelComplete;
 
+
+        _levelManager.FadeInLevel(); // **開始淡入動畫**
         // **等待轉場動畫結束後再顯示 `startIcon`**
         StartCoroutine(WaitForTransitionToEnd());
     }
@@ -167,14 +169,14 @@ public class GameManager : MonoBehaviour
 
     private void OnTransitionFinished()
     {
-        Debug.Log("轉場動畫結束，檢查是否顯示 Start Icon");
-
-        // **確保轉場動畫完成後才顯示**
         if (!transDemo.IsTransitioning && _levelManager != null)
         {
             ShowStartIcon();
+            _levelManager.FadeInLevel(); //讓 LevelManager 啟動淡入
         }
     }
+
+
 
     private void ClearPreviousLevel()
     {
@@ -227,6 +229,58 @@ public class GameManager : MonoBehaviour
             // 可以在這裡添加通關後的處理邏輯
         }
     }
+
+    public IEnumerator FadeInCoroutine(SpriteRenderer[] sprites, float duration)
+    {
+        float elapsedTime = 0f;
+
+        // **記錄每個 Sprite 原始透明度**
+        Dictionary<SpriteRenderer, float> originalAlphas = new Dictionary<SpriteRenderer, float>();
+
+        foreach (var sprite in sprites)
+        {
+            originalAlphas[sprite] = sprite.color.a; // **紀錄原始透明度**
+            Color tempColor = sprite.color;
+            tempColor.a = 0;  // **先把所有物件設為透明**
+            sprite.color = tempColor;
+        }
+
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            float alphaLerp = Mathf.Lerp(0, 1, elapsedTime / duration);
+
+            foreach (var sprite in sprites)
+            {
+                Color tempColor = sprite.color;
+
+                // **原本 alpha = 1 的物件才會從 0 淡入**
+                if (originalAlphas[sprite] == 1)
+                {
+                    tempColor.a = alphaLerp;
+                }
+                else
+                {
+                    tempColor.a = 0; // **原本是 0 的保持透明**
+                }
+
+                sprite.color = tempColor;
+            }
+            yield return null;
+        }
+
+        // **確保最終透明度正確**
+        foreach (var sprite in sprites)
+        {
+            Color tempColor = sprite.color;
+            tempColor.a = originalAlphas[sprite] == 1 ? 1 : 0; // **原本是 1 的變回 1，0 的保持 0**
+            sprite.color = tempColor;
+        }
+
+    }
+
+
+
 
     // **延遲載入下一關，確保移動過程不會瞬間跳過**
     private IEnumerator LoadNextLevelAfterDelay()
