@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using TransitionScreenPackage.Data;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace TransitionScreenPackage.Demo
 {
@@ -16,7 +15,7 @@ namespace TransitionScreenPackage.Demo
 
         private TransitionScreenManager _currentTransitionScreen;
 
-        //·s¼WIsTransitioning ÄÝ©Ê¡A¹w³]¬° false
+        //ï¿½sï¿½WIsTransitioning ï¿½Ý©Ê¡Aï¿½wï¿½]ï¿½ï¿½ false
         public bool IsTransitioning { get; private set; } = false;
 
         private void SpawnSelectedTransitionScreen()
@@ -25,7 +24,7 @@ namespace TransitionScreenPackage.Demo
             {
                 if (transition.Type.Equals(_selectedType))
                 {
-                    // ²M°£ÂÂªº TransitionScreen
+                    // ï¿½Mï¿½ï¿½ï¿½Âªï¿½ TransitionScreen
                     if (_currentTransitionScreen != null)
                     {
                         _currentTransitionScreen.FinishedRevealEvent -= OnTransitionScreenRevealed;
@@ -34,19 +33,19 @@ namespace TransitionScreenPackage.Demo
                         Destroy(_currentTransitionScreen.gameObject);
                     }
 
-                    //Âà³õ¶}©l¡A³]¬° true
+                    //ï¿½ï¿½ï¿½ï¿½}ï¿½lï¿½Aï¿½]ï¿½ï¿½ true
                     IsTransitioning = true;
 
-                    // ²£¥Í·sªº TransitionScreen
+                    // ï¿½ï¿½ï¿½Í·sï¿½ï¿½ TransitionScreen
                     GameObject instantiatedTransitionScreen = Instantiate(transition.GetVersion(_selectedVersion).PrefabObject, transform);
                     _currentTransitionScreen = instantiatedTransitionScreen.GetComponent<TransitionScreenManager>();
 
-                    // ­q¾\¨Æ¥ó
+                    // ï¿½qï¿½\ï¿½Æ¥ï¿½
                     _currentTransitionScreen.FinishedRevealEvent += OnTransitionScreenRevealed;
                     _currentTransitionScreen.FinishedHideEvent += OnTransitionScreenHidden;
-                    _currentTransitionScreen.FinishedRuleEvent += OnTransitionScreenRule;
+                    _currentTransitionScreen.FinishedHideEvent += OnTransitionScreenRule;
 
-                    //±Ò°Ê Reveal (Âà³õ°Êµe¶}©l)
+                    //ï¿½Ò°ï¿½ Reveal (ï¿½ï¿½ï¿½ï¿½Êµeï¿½}ï¿½l)
                     _currentTransitionScreen.Reveal();
                     break;
                 }
@@ -60,18 +59,18 @@ namespace TransitionScreenPackage.Demo
 
         private void OnTransitionScreenRevealed()
         {
-            //Âà³õ Reveal °Êµeµ²§ô¡A¶}©l Hide (¾B¸nÁôÂÃ)
+            //ï¿½ï¿½ï¿½ Reveal ï¿½Êµeï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½}ï¿½l Hide (ï¿½Bï¿½nï¿½ï¿½ï¿½ï¿½)
             _currentTransitionScreen.Hide();
         }
 
         private void OnTransitionScreenHidden()
         {
-            //Âà³õ Hide °Êµeµ²§ô¡A¶}©l Rule(¼½©ñ³W«h°Êµe)
+            //ï¿½ï¿½ï¿½ Hide ï¿½Êµeï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½Ð°Oï¿½ï¿½falseï¿½Aï¿½Êµeï¿½wï¿½ï¿½ï¿½ï¿½
             _currentTransitionScreen.Rule();
         }
         private void OnTransitionScreenRule()
         {
-            //Rule °Êµeµ²§ô¡A¼Ð°O¬°false¡A°Êµe¤w§¹¦¨
+            //ï¿½ï¿½ï¿½ Hide ï¿½Êµeï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½Ð°Oï¿½ï¿½falseï¿½Aï¿½Êµeï¿½wï¿½ï¿½ï¿½ï¿½
             IsTransitioning = false;
         }
     }

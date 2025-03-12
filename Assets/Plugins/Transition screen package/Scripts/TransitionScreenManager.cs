@@ -18,45 +18,43 @@ namespace TransitionScreenPackage
 
         private void Awake()
         {
-            // ¦pªG»Ý­nªì©l¤Æ
+            // ï¿½pï¿½Gï¿½Ý­nï¿½ï¿½lï¿½ï¿½
         }
 
-        public void Reveal() //²H¤Jtrigger
+
+        public void Reveal() //ï¿½Hï¿½Jtrigger
         {
             _animator.SetTrigger("Reveal");
         }
 
-        public void Hide() //²H¥Xtrigger
+        public void Hide() //ï¿½Hï¿½Xtrigger
         {
             _animator.SetTrigger("Hide");
         }
 
-        public void Rule() //³W«h­¶trigger
+        public void Rule() //ï¿½Wï¿½hï¿½ï¿½trigger
         {
             _animator.SetTrigger("Rule");
         }
 
         public void OnFinishedHideAnimation()
         {
-            Debug.Log("Finished Hide Animation");
-            // ½T«O Animator ¤£¼vÅT«áÄò¾Þ§@
+            //ï¿½Tï¿½O Animator ï¿½ï¿½ï¿½vï¿½Tï¿½ï¿½ï¿½ï¿½Þ§@
             _animator.enabled = false;
 
-            // Ä²µo¨Æ¥ó¡A³qª¾¨ä¥L¨t²ÎÂà³õ¤w§¹¦¨
+            // Ä²ï¿½oï¿½Æ¥ï¿½Aï¿½qï¿½ï¿½ï¿½ï¿½Lï¿½tï¿½ï¿½ï¿½ï¿½ï¿½ï¿½wï¿½ï¿½ï¿½ï¿½
             FinishedHideEvent?.Invoke();
         }
 
         public void OnFinishedRevealAnimation()
         {
-            Debug.Log("Finished Reveal Animation");
-            // Ä²µo¨Æ¥ó¡A³qª¾¨ä¥L¨t²ÎÂà³õ¤w§¹¦¨
+            //Ä²ï¿½oï¿½Æ¥ï¿½Aï¿½qï¿½ï¿½ï¿½ï¿½Lï¿½tï¿½ï¿½ï¿½ï¿½ï¿½ï¿½wï¿½ï¿½ï¿½ï¿½
             FinishedRevealEvent?.Invoke();
         }
 
         public void OnFinishedRuleAnimation()
         {
-            Debug.Log("Finished Rule Animation");
-            // Ä²µo¨Æ¥ó¡A³qª¾¨ä¥L¨t²Î³W«h°Êµe¤w§¹¦¨
+            //Ä²ï¿½oï¿½Æ¥ï¿½Aï¿½qï¿½ï¿½ï¿½ï¿½Lï¿½tï¿½Î³Wï¿½hï¿½Êµeï¿½wï¿½ï¿½ï¿½ï¿½
             FinishedRuleEvent?.Invoke();
         }
     }
