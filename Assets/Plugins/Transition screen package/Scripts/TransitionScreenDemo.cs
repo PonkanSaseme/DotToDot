@@ -73,7 +73,6 @@ namespace TransitionScreenPackage.Demo
         private void OnTransitionScreenRule()
         {
             //Rule 動畫結束，標記為false，動畫已完成
-            _RuleScene.SetActive(true);
             IsTransitioning = false;
         }
     }
