@@ -229,9 +229,8 @@ public class GameManager : MonoBehaviour
 
         if (currentLevelIndex + 1 < _levels.Count)
         {
-            currentLevelIndex++;
-            StartCoroutine(MoveCameraToNextLevel()); // 確保攝影機移動
-            StartCoroutine(LoadNextLevelAfterDelay()); // 等待攝影機移動完成後載入
+            RewardScene();
+
         }
         else
         {
@@ -240,61 +239,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void FadeIn(SpriteRenderer[] sprites, float duration)
-    {
-        StartCoroutine(FadeInCoroutine(sprites,duration));
-    }
-
-    public IEnumerator FadeInCoroutine(SpriteRenderer[] sprites, float duration)
-    {
-        float elapsedTime = 0f;
-        Debug.Log("While Fade In");
-        // 記錄每個 Sprite 原始透明度
-        Dictionary<SpriteRenderer, float> originalAlphas = new Dictionary<SpriteRenderer, float>();
-
-        foreach (var sprite in sprites)
-        {
-            if (sprite == null) continue; // 檢查對象是否存在
-            originalAlphas[sprite] = sprite.color.a; // 紀錄原始透明度
-            Color tempColor = sprite.color;
-            tempColor.a = 0;  // 先把所有物件設為透明
-            sprite.color = tempColor;
-        }
-
-        while (elapsedTime < duration)
-        {
-            elapsedTime += Time.deltaTime;
-            float alphaLerp = Mathf.Lerp(0, 1, elapsedTime / duration);
-
-            foreach (var sprite in sprites)
-            {
-                if (sprite == null) continue; // 檢查對象是否存在
-                Color tempColor = sprite.color;
-
-                // 原本 alpha = 1 的物件才會從 0 淡入
-                if (originalAlphas[sprite] == 1)
-                {
-                    tempColor.a = alphaLerp;
-                }
-                else
-                {
-                    tempColor.a = 0; // 原本是 0 的保持透明
-                }
-
-                sprite.color = tempColor;
-            }
-            yield return null;
-        }
-
-        // 確保最終透明度正確
-        foreach (var sprite in sprites)
-        {
-            if (sprite == null) continue; // 檢查對象是否存在
-            Color tempColor = sprite.color;
-            tempColor.a = originalAlphas[sprite] == 1 ? 1 : 0; // 原本是 1 的變回 1，0 的保持 0
-            sprite.color = tempColor;
-        }
-
+    private void RewardScene() {//抽獎獨立放一個custom class
+        currentLevelIndex++;
+        //抽獎放這邊，抽完獎才移動攝影機跟載入
+        StartCoroutine(MoveCameraToNextLevel()); // 確保攝影機移動
+        StartCoroutine(LoadNextLevelAfterDelay()); // 等待攝影機移動完成後載入
     }
 
     // 延遲載入下一關，確保移動過程不會瞬間跳過
@@ -304,7 +253,7 @@ public class GameManager : MonoBehaviour
         LoadLevel(currentLevelIndex, true); // 傳遞 true 來標識是重新繪製
     }
 
-    private IEnumerator MoveCameraToNextLevel()
+    private IEnumerator MoveCameraToNextLevel()//獨立出來一個Custom Class
     {
         if (currentLevelIndex + 1 >= _levels.Count || isCameraMoving)
             yield break; // 如果已經是最後一關，或攝影機正在移動，就不執行
