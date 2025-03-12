@@ -5,6 +5,7 @@ using System.Collections;
 public class LevelManager
 {
     public event Action OnLevelComplete;
+    //public event Action<SpriteRenderer[], float> OnFadeIn;
 
     private Level _level;
     private Cell[,] _cells;
@@ -99,7 +100,7 @@ public class LevelManager
         CheckWin();
     }
 
-    public void FadeInLevel(float duration = 1f)
+    /*public void FadeInLevel(float duration = 1f)
     {
         _levelParent.gameObject.SetActive(true); // **確保關卡物件被啟用**
 
@@ -110,16 +111,17 @@ public class LevelManager
             tempColor.a = 0; // **設為透明**
             sprite.color = tempColor;
         }
-
+        Debug.Log("FadeIn duration");
         // **請 GameManager 來執行 Coroutine**
-        GameManager.Instance.StartCoroutine(GameManager.Instance.FadeInCoroutine(sprites, duration));
-}
+        OnFadeIn?.Invoke(sprites, duration);
+}*/
 
-    public void FadeInLevel()
+    /*public void FadeInLevel()
     {
         SpriteRenderer[] spriteRenderers = _levelParent.GetComponentsInChildren<SpriteRenderer>();
-        GameManager.Instance.StartCoroutine(GameManager.Instance.FadeInCoroutine(spriteRenderers, 2f));
-    }
+        Debug.Log("FadeIn 2f");
+        OnFadeIn?.Invoke(spriteRenderers, 2f);
+    }*/
 
 
 

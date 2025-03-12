@@ -59,22 +59,17 @@ namespace TransitionScreenPackage.Demo
 
         private void OnTransitionScreenRevealed()
         {
-            //ï¿½ï¿½ï¿½ Reveal ï¿½Êµeï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½}ï¿½l Hide (ï¿½Bï¿½nï¿½ï¿½ï¿½ï¿½)
+            //ï¿½ï¿½ï¿?Reveal ï¿½Êµeï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½}ï¿½l Hide (ï¿½Bï¿½nï¿½ï¿½ï¿½ï¿½)
             _currentTransitionScreen.Hide();
         }
 
         private void OnTransitionScreenHidden()
         {
-            //ï¿½ï¿½ï¿½ Hide ï¿½Êµeï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½Ð°Oï¿½ï¿½falseï¿½Aï¿½Êµeï¿½wï¿½ï¿½ï¿½ï¿½
+            //ï¿½ï¿½ï¿?Hide ï¿½Êµeï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½Ð°Oï¿½ï¿½falseï¿½Aï¿½Êµeï¿½wï¿½ï¿½ï¿½ï¿½
             _currentTransitionScreen.Rule();
         }
         private void OnTransitionScreenRule()
         {
-<<<<<<< HEAD
-            //Rule °Êµeµ²§ô¡A¼Ð°O¬°false¡A°Êµe¤w§¹¦¨
-=======
-            //ï¿½ï¿½ï¿½ Hide ï¿½Êµeï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½Ð°Oï¿½ï¿½falseï¿½Aï¿½Êµeï¿½wï¿½ï¿½ï¿½ï¿½
->>>>>>> parent of 4d78ae9 (0312_update)
             IsTransitioning = false;
         }
     }

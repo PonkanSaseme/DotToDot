@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5177507590486486885}
   - component: {fileID: 5177507590486486884}
   - component: {fileID: 5177507590486486883}
+  - component: {fileID: 9197750795443500660}
   m_Layer: 0
   m_Name: Cell
   m_TagString: Untagged
@@ -105,3 +106,24 @@ MonoBehaviour:
   _cellRenderer: {fileID: 5177507590486486884}
   _startColor: {r: 0.6249003, g: 0.9150943, b: 0.4963955, a: 1}
   _endColor: {r: 1, g: 0.6367924, b: 0.8355187, a: 1}
+  animator: {fileID: 9197750795443500660}
+--- !u!95 &9197750795443500660
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5177507590486486882}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: c77685b2efc1e0e49acc75b210571acf, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0

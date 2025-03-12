@@ -41,7 +41,7 @@ namespace TransitionScreenPackage
         {
             //�T�O Animator ���v�T����ާ@
             _animator.enabled = false;
-
+            Debug.Log("Finished");
             // Ĳ�o�ƥ�A�q����L�t������w����
             FinishedHideEvent?.Invoke();
         }
@@ -49,6 +49,7 @@ namespace TransitionScreenPackage
         public void OnFinishedRevealAnimation()
         {
             //Ĳ�o�ƥ�A�q����L�t������w����
+            Debug.Log("Reveal");
             FinishedRevealEvent?.Invoke();
         }
 

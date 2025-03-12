@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject transition; //轉場
     [SerializeField] private GameObject startScene; //開始畫面
     [SerializeField] private GameObject startIcon; // **拖入動畫 Image**
+    [SerializeField] private GameObject _rulePrefab;
 
     [SerializeField] private TransitionScreenDemo transDemo;
 
@@ -113,10 +114,8 @@ public class GameManager : MonoBehaviour
         TransitionScreenManager transition = FindObjectOfType<TransitionScreenManager>();
 
         // 確保不重複訂閱事件
-        transition.FinishedHideEvent -= OnTransitionFinished;
-        transition.FinishedHideEvent += OnTransitionFinished;
 
-        transition.FinishedHideEvent += Initialize;
+        transition.FinishedRevealEvent += Initialize;
     }
 
     private void Initialize()
@@ -129,10 +128,17 @@ public class GameManager : MonoBehaviour
             _levelManager.CleanUp();
         }
 
+        _rulePrefab.SetActive(true);
+    }
+
+    public void OnRuleClick()
+    {
+        _rulePrefab.SetActive(false);
         hasGameFinished = false;
         hasGameStart = true;
 
         LoadLevel(currentLevelIndex);
+
     }
 
     private void LoadLevel(int levelIndex, bool redraw = false)
@@ -155,7 +161,6 @@ public class GameManager : MonoBehaviour
 
         if (!isRedraw)
         {
-            _levelManager.FadeInLevel(); // 開始淡入動畫
             // 等待轉場動畫結束後再顯示 startIcon
             StartCoroutine(WaitForTransitionToEnd());
         }
@@ -181,18 +186,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void OnTransitionFinished()
-    {
-        if (!transDemo.IsTransitioning && _levelManager != null)
-        {
-            if (!isLevelTransitioning) // 檢查是否在關卡轉場中
-            {
-                _levelManager.FadeInLevel(); //讓 LevelManager 啟動淡入
-            }
-        }
-    }
-
-
 
     private void ClearPreviousLevel()
     {
@@ -210,6 +203,7 @@ public class GameManager : MonoBehaviour
         if (_levelManager != null)
         {
             _levelManager.OnLevelComplete -= HandleLevelComplete;
+            //_levelManager.OnFadeIn -= FadeIn;
             HideStartIcon(); // 清除 Start Icon
             _levelManager.CleanUp();
             _levelManager = null;
@@ -246,10 +240,15 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void FadeIn(SpriteRenderer[] sprites, float duration)
+    {
+        StartCoroutine(FadeInCoroutine(sprites,duration));
+    }
+
     public IEnumerator FadeInCoroutine(SpriteRenderer[] sprites, float duration)
     {
         float elapsedTime = 0f;
-
+        Debug.Log("While Fade In");
         // 記錄每個 Sprite 原始透明度
         Dictionary<SpriteRenderer, float> originalAlphas = new Dictionary<SpriteRenderer, float>();
 

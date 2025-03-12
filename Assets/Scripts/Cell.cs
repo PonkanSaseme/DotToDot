@@ -12,6 +12,9 @@ public class Cell : MonoBehaviour
     [SerializeField] private Color _startColor; // 新增自定義開始點顏色
     [SerializeField] private Color _endColor; // 新增自定義結束點顏色
 
+    [SerializeField] private Animator animator;
+
+
     public void Init(bool isWalkable)
     {
         Blocked = !isWalkable;
@@ -19,6 +22,15 @@ public class Cell : MonoBehaviour
 
         // 用顏色來區分可走與不可走的格子
         _cellRenderer.color = Blocked ? _blockedColor : _emptyColor;
+
+        if (!Blocked)
+        {
+            animator.Play("CellIn");
+        }
+        else
+        {
+            animator.Play("Cell_Alpha0");
+        }
     }
 
     public void Add()
@@ -55,4 +67,5 @@ public class Cell : MonoBehaviour
         _blockedColor.a = alpha; // **設定透明度**
         _cellRenderer.color = _blockedColor; // **更新顏色**
     }
+
 }
