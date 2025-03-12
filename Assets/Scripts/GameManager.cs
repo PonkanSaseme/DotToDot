@@ -153,9 +153,7 @@ public class GameManager : MonoBehaviour
 
         if (!isRedraw)
         {
-            _levelManager.FadeInLevel(); // 開始淡入動畫
-            // 等待轉場動畫結束後再顯示 startIcon
-            StartCoroutine(WaitForTransitionToEnd());
+            StartCoroutine(WaitForTransitionToEnd()); // 等待轉場動畫結束後再顯示 startIcon
         }
         else
         {
@@ -183,10 +181,10 @@ public class GameManager : MonoBehaviour
     {
         if (!transDemo.IsTransitioning && _levelManager != null)
         {
-            ShowStartIcon();
             if (!isLevelTransitioning) // 檢查是否在關卡轉場中
             {
                 _levelManager.FadeInLevel(); //讓 LevelManager 啟動淡入
+                StartCoroutine(ShowStartIconAfterFadeIn()); // 淡入 level 後再顯示 startIcon
             }
         }
     }
@@ -341,11 +339,19 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        // 轉場動畫結束後顯示 Start Icon
+        // 轉場動畫結束後淡入 Level
         if (_levelManager != null)
         {
-            ShowStartIcon();
+            _levelManager.FadeInLevel(); //讓 LevelManager 啟動淡入
+            StartCoroutine(ShowStartIconAfterFadeIn()); // 淡入 level 後再顯示 startIcon
         }
+    }
+
+    private IEnumerator ShowStartIconAfterFadeIn()
+    {
+        // 假設淡入動畫持續時間為 1 秒
+        yield return new WaitForSeconds(1f);
+        ShowStartIcon();
     }
 
     private void ShowStartIcon()
