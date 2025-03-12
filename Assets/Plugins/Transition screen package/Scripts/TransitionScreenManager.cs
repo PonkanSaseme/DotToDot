@@ -13,19 +13,27 @@ namespace TransitionScreenPackage
         public delegate void FinishedHide();
         public event FinishedHide FinishedHideEvent;
 
+        public delegate void FinishedRule();
+        public event FinishedRule FinishedRuleEvent;
+
         private void Awake()
         {
         }
 
 
-        public void Reveal()
+        public void Reveal() //淡入trigger
         {
             _animator.SetTrigger("Reveal");
         }
 
-        public void Hide()
+        public void Hide() //淡出trigger
         {
             _animator.SetTrigger("Hide");
+        }
+
+        public void Rule() //規則頁trigger
+        {
+            _animator.SetTrigger("Rule");
         }
 
         public void OnFinishedHideAnimation()
@@ -41,6 +49,12 @@ namespace TransitionScreenPackage
         {
             //觸發事件，通知其他系統轉場已完成
             FinishedRevealEvent?.Invoke();
+        }
+
+        public void OnFinishedRuleAnimation()
+        {
+            //觸發事件，通知其他系統規則動畫已完成
+            FinishedRuleEvent?.Invoke();
         }
     }
 }

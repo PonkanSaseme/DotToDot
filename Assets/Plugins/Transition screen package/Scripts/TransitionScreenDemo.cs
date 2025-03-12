@@ -29,6 +29,7 @@ namespace TransitionScreenPackage.Demo
                     {
                         _currentTransitionScreen.FinishedRevealEvent -= OnTransitionScreenRevealed;
                         _currentTransitionScreen.FinishedHideEvent -= OnTransitionScreenHidden;
+                        _currentTransitionScreen.FinishedRuleEvent -= OnTransitionScreenRule;
                         Destroy(_currentTransitionScreen.gameObject);
                     }
 
@@ -42,6 +43,7 @@ namespace TransitionScreenPackage.Demo
                     // 訂閱事件
                     _currentTransitionScreen.FinishedRevealEvent += OnTransitionScreenRevealed;
                     _currentTransitionScreen.FinishedHideEvent += OnTransitionScreenHidden;
+                    _currentTransitionScreen.FinishedHideEvent += OnTransitionScreenRule;
 
                     //啟動 Reveal (轉場動畫開始)
                     _currentTransitionScreen.Reveal();
@@ -62,6 +64,11 @@ namespace TransitionScreenPackage.Demo
         }
 
         private void OnTransitionScreenHidden()
+        {
+            //轉場 Hide 動畫結束，標記為false，動畫已完成
+            _currentTransitionScreen.Rule();
+        }
+        private void OnTransitionScreenRule()
         {
             //轉場 Hide 動畫結束，標記為false，動畫已完成
             IsTransitioning = false;
