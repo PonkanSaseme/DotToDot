@@ -71,11 +71,7 @@ public class GameManager : MonoBehaviour
         if (!hasGameStart || hasGameFinished) return; // 確保遊戲已開始且未結束
 
         // 確保 _levelManager 已經被初始化
-        if (_levelManager == null)
-        {
-            Debug.LogWarning("LevelManager 尚未被初始化！");
-            return;
-        }
+        if (_levelManager == null) return;
         isPressing = true;
         curScreenPos = screenPos.ReadValue<Vector2>();
         Vector3 worldPos = Camera.main.ScreenToWorldPoint(curScreenPos);
@@ -91,10 +87,7 @@ public class GameManager : MonoBehaviour
         if (!hasGameStart || hasGameFinished) return; // 確保遊戲已開始且未結束
 
         // 確保 _levelManager 已經被初始化
-        if (_levelManager == null)
-        {
-            return;
-        }
+        if (_levelManager == null) return;
     }
 
     private void OnTouchCanceled(InputAction.CallbackContext context)
@@ -111,10 +104,10 @@ public class GameManager : MonoBehaviour
         TransitionScreenManager transition = FindObjectOfType<TransitionScreenManager>();
 
         // 確保不重複訂閱事件
-        transition.FinishedHideEvent -= OnTransitionFinished;
-        transition.FinishedHideEvent += OnTransitionFinished;
+        transition.FinishedRuleEvent -= OnTransitionFinished;
+        transition.FinishedRuleEvent += OnTransitionFinished;
 
-        transition.FinishedHideEvent += Initialize;
+        transition.FinishedRuleEvent += Initialize;
     }
 
     private void Initialize()
@@ -122,6 +115,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("Init");
         // 確保 parent 父物件開啟
         _parentContainer.gameObject.SetActive(true);
+        Debug.Log("Parent Container Active: " + _parentContainer.gameObject.activeSelf);
         if (_levelManager != null)
         {
             _levelManager.CleanUp();
@@ -181,6 +175,7 @@ public class GameManager : MonoBehaviour
 
     private void OnTransitionFinished()
     {
+        Debug.Log("Transition Finished");
         if (!transDemo.IsTransitioning && _levelManager != null)
         {
             ShowStartIcon();

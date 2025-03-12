@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using TransitionScreenPackage.Data;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace TransitionScreenPackage.Demo
 {
@@ -8,6 +9,7 @@ namespace TransitionScreenPackage.Demo
     {
         [SerializeField] private TransitionScreenType _selectedType;
         [SerializeField] private TransitionScreenVersion _selectedVersion;
+        [SerializeField] public GameObject _RuleScene;
 
         [Space]
         [Header("DO NOT CHANGE THESE!")]
@@ -43,7 +45,7 @@ namespace TransitionScreenPackage.Demo
                     // 訂閱事件
                     _currentTransitionScreen.FinishedRevealEvent += OnTransitionScreenRevealed;
                     _currentTransitionScreen.FinishedHideEvent += OnTransitionScreenHidden;
-                    _currentTransitionScreen.FinishedHideEvent += OnTransitionScreenRule;
+                    _currentTransitionScreen.FinishedRuleEvent += OnTransitionScreenRule;
 
                     //啟動 Reveal (轉場動畫開始)
                     _currentTransitionScreen.Reveal();
@@ -65,12 +67,13 @@ namespace TransitionScreenPackage.Demo
 
         private void OnTransitionScreenHidden()
         {
-            //轉場 Hide 動畫結束，標記為false，動畫已完成
+            //轉場 Hide 動畫結束，開始 Rule(播放規則動畫)
             _currentTransitionScreen.Rule();
         }
         private void OnTransitionScreenRule()
         {
-            //轉場 Hide 動畫結束，標記為false，動畫已完成
+            //Rule 動畫結束，標記為false，動畫已完成
+            _RuleScene.SetActive(true);
             IsTransitioning = false;
         }
     }

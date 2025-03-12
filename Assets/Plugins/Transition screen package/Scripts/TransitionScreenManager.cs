@@ -20,7 +20,6 @@ namespace TransitionScreenPackage
         {
         }
 
-
         public void Reveal() //淡入trigger
         {
             _animator.SetTrigger("Reveal");
@@ -38,6 +37,7 @@ namespace TransitionScreenPackage
 
         public void OnFinishedHideAnimation()
         {
+            Debug.Log("Finished Hide Animation");
             //確保 Animator 不影響後續操作
             _animator.enabled = false;
 
@@ -47,12 +47,14 @@ namespace TransitionScreenPackage
 
         public void OnFinishedRevealAnimation()
         {
+            Debug.Log("Finished Reveal Animation");
             //觸發事件，通知其他系統轉場已完成
             FinishedRevealEvent?.Invoke();
         }
 
         public void OnFinishedRuleAnimation()
         {
+            Debug.Log("Finished Rule Animation");
             //觸發事件，通知其他系統規則動畫已完成
             FinishedRuleEvent?.Invoke();
         }
