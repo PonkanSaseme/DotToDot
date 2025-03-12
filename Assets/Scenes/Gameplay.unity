@@ -524,6 +524,8 @@ MonoBehaviour:
   transition: {fileID: 1037066609}
   startScene: {fileID: 1924724762}
   startIcon: {fileID: 1618012952}
+  ruleScene: {fileID: 1696633965}
+  ruleAnim: {fileID: 0}
   transDemo: {fileID: 1037066610}
 --- !u!1 &228923196
 GameObject:
@@ -1491,7 +1493,7 @@ Animator:
   m_GameObject: {fileID: 1825007897}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 2d5c15cce8282c44ca3de764bb52196f, type: 2}
+  m_Controller: {fileID: 9100000, guid: f37fa310ba3a8dc488a6493a4e81ebb3, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
