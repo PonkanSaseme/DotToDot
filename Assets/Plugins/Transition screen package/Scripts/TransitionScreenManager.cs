@@ -27,6 +27,10 @@ namespace TransitionScreenPackage
         {
             _animator.SetTrigger("Hide");
         }
+        public void Rule()
+        {
+            _animator.SetTrigger("Rule");
+        }
 
         public void OnFinishedHideAnimation()
         {

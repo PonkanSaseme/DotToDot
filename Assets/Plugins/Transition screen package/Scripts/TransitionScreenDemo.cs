@@ -59,6 +59,7 @@ namespace TransitionScreenPackage.Demo
         {
             //轉場 Reveal 動畫結束，開始 Hide (遮罩隱藏)
             _currentTransitionScreen.Hide();
+            _currentTransitionScreen.Rule();
         }
 
         private void OnTransitionScreenHidden()

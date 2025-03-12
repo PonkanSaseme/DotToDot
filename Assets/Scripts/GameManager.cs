@@ -18,8 +18,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject transition; //轉場
     [SerializeField] private GameObject startScene; //開始畫面
     [SerializeField] private GameObject startIcon; // 拖入動畫 Image
-    [SerializeField] private GameObject ruleScene; // 規則頁面
-    [SerializeField] private Animation ruleAnim; // 規則動畫
 
     [SerializeField] private TransitionScreenDemo transDemo;
 
@@ -188,18 +186,6 @@ public class GameManager : MonoBehaviour
                 _levelManager.FadeInLevel(); //讓 LevelManager 啟動淡入
                 StartCoroutine(ShowStartIconAfterFadeIn()); // 淡入 level 後再顯示 startIcon
             }
-
-            // 播放規則動畫
-            PlayRuleAnim();
-        }
-    }
-
-    private void PlayRuleAnim()
-    {
-        if (ruleScene != null && ruleAnim != null)
-        {
-            ruleScene.SetActive(true); // 顯示 ruleScene
-            ruleAnim.Play(); // 播放規則動畫
         }
     }
 
