@@ -9,7 +9,6 @@ namespace TransitionScreenPackage.Demo
     {
         [SerializeField] private TransitionScreenType _selectedType;
         [SerializeField] private TransitionScreenVersion _selectedVersion;
-        [SerializeField] public GameObject _RuleScene;
 
         [Space]
         [Header("DO NOT CHANGE THESE!")]

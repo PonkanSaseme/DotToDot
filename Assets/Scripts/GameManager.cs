@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI; // 引入 UI 命名空間
 using TransitionScreenPackage;
 using TransitionScreenPackage.Demo;
 
@@ -64,6 +65,7 @@ public class GameManager : MonoBehaviour
         press.canceled -= OnTouchCanceled;
         press.Disable();
         screenPos.Disable();
+
     }
 
     private void OnTouchStarted(InputAction.CallbackContext context)
@@ -184,6 +186,8 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+
+
 
     private void ClearPreviousLevel()
     {
