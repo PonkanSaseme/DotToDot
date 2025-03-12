@@ -178,7 +178,6 @@ public class GameManager : MonoBehaviour
         Debug.Log("OnTransitionFinished Called");
         if (!transDemo.IsTransitioning && _levelManager != null)
         {
-            ShowStartIcon();
             if (!isLevelTransitioning) // 檢查是否在關卡轉場中
             {
                 _levelManager.FadeInLevel(); //讓 LevelManager 啟動淡入
@@ -339,11 +338,6 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        // 轉場動畫結束後顯示 Start Icon
-        if (_levelManager != null)
-        {
-            ShowStartIcon();
-        }
     }
 
     private void ShowStartIcon()

@@ -18,6 +18,7 @@ namespace TransitionScreenPackage
 
         private void Awake()
         {
+            // 如果需要初始化
         }
 
         public void Reveal() //淡入trigger
@@ -38,24 +39,24 @@ namespace TransitionScreenPackage
         public void OnFinishedHideAnimation()
         {
             Debug.Log("Finished Hide Animation");
-            //確保 Animator 不影響後續操作
+            // 確保 Animator 不影響後續操作
             _animator.enabled = false;
 
-            //觸發事件，通知其他系統轉場已完成
+            // 觸發事件，通知其他系統轉場已完成
             FinishedHideEvent?.Invoke();
         }
 
         public void OnFinishedRevealAnimation()
         {
             Debug.Log("Finished Reveal Animation");
-            //觸發事件，通知其他系統轉場已完成
+            // 觸發事件，通知其他系統轉場已完成
             FinishedRevealEvent?.Invoke();
         }
 
         public void OnFinishedRuleAnimation()
         {
             Debug.Log("Finished Rule Animation");
-            //觸發事件，通知其他系統規則動畫已完成
+            // 觸發事件，通知其他系統規則動畫已完成
             FinishedRuleEvent?.Invoke();
         }
     }
