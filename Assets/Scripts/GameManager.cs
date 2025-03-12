@@ -175,7 +175,7 @@ public class GameManager : MonoBehaviour
 
     private void OnTransitionFinished()
     {
-        Debug.Log("Transition Finished");
+        Debug.Log("OnTransitionFinished Called");
         if (!transDemo.IsTransitioning && _levelManager != null)
         {
             ShowStartIcon();
@@ -247,6 +247,7 @@ public class GameManager : MonoBehaviour
 
         foreach (var sprite in sprites)
         {
+            if (sprite == null) continue; // 檢查對象是否存在
             originalAlphas[sprite] = sprite.color.a; // 紀錄原始透明度
             Color tempColor = sprite.color;
             tempColor.a = 0;  // 先把所有物件設為透明
@@ -260,6 +261,7 @@ public class GameManager : MonoBehaviour
 
             foreach (var sprite in sprites)
             {
+                if (sprite == null) continue; // 檢查對象是否存在
                 Color tempColor = sprite.color;
 
                 // 原本 alpha = 1 的物件才會從 0 淡入
@@ -280,6 +282,7 @@ public class GameManager : MonoBehaviour
         // 確保最終透明度正確
         foreach (var sprite in sprites)
         {
+            if (sprite == null) continue; // 檢查對象是否存在
             Color tempColor = sprite.color;
             tempColor.a = originalAlphas[sprite] == 1 ? 1 : 0; // 原本是 1 的變回 1，0 的保持 0
             sprite.color = tempColor;
