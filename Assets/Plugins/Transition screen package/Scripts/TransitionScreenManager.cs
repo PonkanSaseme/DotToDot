@@ -18,43 +18,44 @@ namespace TransitionScreenPackage
 
         private void Awake()
         {
-            // ï¿½pï¿½Gï¿½Ý­nï¿½ï¿½lï¿½ï¿½
         }
 
-
-        public void Reveal() //ï¿½Hï¿½Jtrigger
+        public void Reveal() //²H¤Jtrigger
         {
             _animator.SetTrigger("Reveal");
         }
 
-        public void Hide() //ï¿½Hï¿½Xtrigger
+        public void Hide() //²H¥Xtrigger
         {
             _animator.SetTrigger("Hide");
         }
 
-        public void Rule() //ï¿½Wï¿½hï¿½ï¿½trigger
+        public void Rule() //³W«h­¶trigger
         {
             _animator.SetTrigger("Rule");
         }
 
         public void OnFinishedHideAnimation()
         {
-            //ï¿½Tï¿½O Animator ï¿½ï¿½ï¿½vï¿½Tï¿½ï¿½ï¿½ï¿½Þ§@
+            Debug.Log("Finished Hide Animation");
+            //½T«O Animator ¤£¼vÅT«áÄò¾Þ§@
             _animator.enabled = false;
 
-            // Ä²ï¿½oï¿½Æ¥ï¿½Aï¿½qï¿½ï¿½ï¿½ï¿½Lï¿½tï¿½ï¿½ï¿½ï¿½ï¿½ï¿½wï¿½ï¿½ï¿½ï¿½
+            //Ä²µo¨Æ¥ó¡A³qª¾¨ä¥L¨t²ÎÂà³õ¤w§¹¦¨
             FinishedHideEvent?.Invoke();
         }
 
         public void OnFinishedRevealAnimation()
         {
-            //Ä²ï¿½oï¿½Æ¥ï¿½Aï¿½qï¿½ï¿½ï¿½ï¿½Lï¿½tï¿½ï¿½ï¿½ï¿½ï¿½ï¿½wï¿½ï¿½ï¿½ï¿½
+            Debug.Log("Finished Reveal Animation");
+            //Ä²µo¨Æ¥ó¡A³qª¾¨ä¥L¨t²ÎÂà³õ¤w§¹¦¨
             FinishedRevealEvent?.Invoke();
         }
 
         public void OnFinishedRuleAnimation()
         {
-            //Ä²ï¿½oï¿½Æ¥ï¿½Aï¿½qï¿½ï¿½ï¿½ï¿½Lï¿½tï¿½Î³Wï¿½hï¿½Êµeï¿½wï¿½ï¿½ï¿½ï¿½
+            Debug.Log("Finished Rule Animation");
+            //Ä²µo¨Æ¥ó¡A³qª¾¨ä¥L¨t²Î³W«h°Êµe¤w§¹¦¨
             FinishedRuleEvent?.Invoke();
         }
     }

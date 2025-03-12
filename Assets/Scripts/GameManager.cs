@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UI; // 引入 UI 命名空間
 using TransitionScreenPackage;
 using TransitionScreenPackage.Demo;
 
@@ -65,7 +64,6 @@ public class GameManager : MonoBehaviour
         press.canceled -= OnTouchCanceled;
         press.Disable();
         screenPos.Disable();
-
     }
 
     private void OnTouchStarted(InputAction.CallbackContext context)
@@ -73,11 +71,7 @@ public class GameManager : MonoBehaviour
         if (!hasGameStart || hasGameFinished) return; // 確保遊戲已開始且未結束
 
         // 確保 _levelManager 已經被初始化
-        if (_levelManager == null)
-        {
-            Debug.LogWarning("LevelManager 尚未被初始化！");
-            return;
-        }
+        if (_levelManager == null) return;
         isPressing = true;
         curScreenPos = screenPos.ReadValue<Vector2>();
         Vector3 worldPos = Camera.main.ScreenToWorldPoint(curScreenPos);
@@ -93,10 +87,7 @@ public class GameManager : MonoBehaviour
         if (!hasGameStart || hasGameFinished) return; // 確保遊戲已開始且未結束
 
         // 確保 _levelManager 已經被初始化
-        if (_levelManager == null)
-        {
-            return;
-        }
+        if (_levelManager == null) return;
     }
 
     private void OnTouchCanceled(InputAction.CallbackContext context)
@@ -113,10 +104,10 @@ public class GameManager : MonoBehaviour
         TransitionScreenManager transition = FindObjectOfType<TransitionScreenManager>();
 
         // 確保不重複訂閱事件
-        transition.FinishedHideEvent -= OnTransitionFinished;
-        transition.FinishedHideEvent += OnTransitionFinished;
+        transition.FinishedRuleEvent -= OnTransitionFinished;
+        transition.FinishedRuleEvent += OnTransitionFinished;
 
-        transition.FinishedHideEvent += Initialize;
+        transition.FinishedRuleEvent += Initialize;
     }
 
     private void Initialize()
@@ -124,6 +115,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("Init");
         // 確保 parent 父物件開啟
         _parentContainer.gameObject.SetActive(true);
+        Debug.Log("Parent Container Active: " + _parentContainer.gameObject.activeSelf);
         if (_levelManager != null)
         {
             _levelManager.CleanUp();
@@ -183,16 +175,16 @@ public class GameManager : MonoBehaviour
 
     private void OnTransitionFinished()
     {
+        Debug.Log("Transition Finished");
         if (!transDemo.IsTransitioning && _levelManager != null)
         {
+            ShowStartIcon();
             if (!isLevelTransitioning) // 檢查是否在關卡轉場中
             {
                 _levelManager.FadeInLevel(); //讓 LevelManager 啟動淡入
             }
         }
     }
-
-
 
     private void ClearPreviousLevel()
     {
@@ -255,7 +247,6 @@ public class GameManager : MonoBehaviour
 
         foreach (var sprite in sprites)
         {
-            if (sprite == null) continue; // 檢查對象是否存在
             originalAlphas[sprite] = sprite.color.a; // 紀錄原始透明度
             Color tempColor = sprite.color;
             tempColor.a = 0;  // 先把所有物件設為透明
@@ -269,7 +260,6 @@ public class GameManager : MonoBehaviour
 
             foreach (var sprite in sprites)
             {
-                if (sprite == null) continue; // 檢查對象是否存在
                 Color tempColor = sprite.color;
 
                 // 原本 alpha = 1 的物件才會從 0 淡入
@@ -290,7 +280,6 @@ public class GameManager : MonoBehaviour
         // 確保最終透明度正確
         foreach (var sprite in sprites)
         {
-            if (sprite == null) continue; // 檢查對象是否存在
             Color tempColor = sprite.color;
             tempColor.a = originalAlphas[sprite] == 1 ? 1 : 0; // 原本是 1 的變回 1，0 的保持 0
             sprite.color = tempColor;
@@ -347,6 +336,11 @@ public class GameManager : MonoBehaviour
             }
         }
 
+        // 轉場動畫結束後顯示 Start Icon
+        if (_levelManager != null)
+        {
+            ShowStartIcon();
+        }
     }
 
     private void ShowStartIcon()
