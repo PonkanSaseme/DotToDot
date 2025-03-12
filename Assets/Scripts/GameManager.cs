@@ -33,6 +33,9 @@ public class GameManager : MonoBehaviour
     private Vector3 curScreenPos;
     private bool isPressing = false; // 用來追蹤按壓狀態
 
+    private bool isRedraw = false;
+    private bool isLevelTransitioning = false; // 新增標識
+
     private void Awake()
     {
         Instance = this;
@@ -130,7 +133,7 @@ public class GameManager : MonoBehaviour
         LoadLevel(currentLevelIndex);
     }
 
-    private void LoadLevel(int levelIndex)
+    private void LoadLevel(int levelIndex, bool redraw = false)
     {
         if (levelIndex < 0 || levelIndex >= _levels.Count)
         {
@@ -138,17 +141,26 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        ClearPreviousLevel(); // **清理舊關卡**
+        isRedraw = redraw; // 設置標識
+        isLevelTransitioning = false; // 重置標識
+
+        ClearPreviousLevel(); // 清理舊關卡
 
         Level level = _levels[levelIndex];
         _levelManager = new LevelManager(level, _cellPrefab, _edgePrefab, _parentContainer);
 
         _levelManager.OnLevelComplete += HandleLevelComplete;
 
-
-        _levelManager.FadeInLevel(); // **開始淡入動畫**
-        // **等待轉場動畫結束後再顯示 `startIcon`**
-        StartCoroutine(WaitForTransitionToEnd());
+        if (!isRedraw)
+        {
+            _levelManager.FadeInLevel(); // 開始淡入動畫
+            // 等待轉場動畫結束後再顯示 startIcon
+            StartCoroutine(WaitForTransitionToEnd());
+        }
+        else
+        {
+            ShowStartIcon();
+        }
     }
 
     private void Update()
@@ -157,7 +169,7 @@ public class GameManager : MonoBehaviour
         {
             Vector3 worldPos = Camera.main.ScreenToWorldPoint(screenPos.ReadValue<Vector2>());
 
-            // **修正座標轉換**
+            // 修正座標轉換
             endPos = new Vector2Int(
                 Mathf.FloorToInt(worldPos.y), // Y 軸對應 Row
                 Mathf.FloorToInt(worldPos.x) // X 軸對應 Col
@@ -172,11 +184,12 @@ public class GameManager : MonoBehaviour
         if (!transDemo.IsTransitioning && _levelManager != null)
         {
             ShowStartIcon();
-            _levelManager.FadeInLevel(); //讓 LevelManager 啟動淡入
+            if (!isLevelTransitioning) // 檢查是否在關卡轉場中
+            {
+                _levelManager.FadeInLevel(); //讓 LevelManager 啟動淡入
+            }
         }
     }
-
-
 
     private void ClearPreviousLevel()
     {
@@ -194,13 +207,13 @@ public class GameManager : MonoBehaviour
         if (_levelManager != null)
         {
             _levelManager.OnLevelComplete -= HandleLevelComplete;
-            HideStartIcon(); // **清除 Start Icon**
+            HideStartIcon(); // 清除 Start Icon
             _levelManager.CleanUp();
             _levelManager = null;
         }
 
         yield return null;
-        LoadLevel(currentLevelIndex);
+        LoadLevel(currentLevelIndex, true); // 傳遞 true 來標識是重新繪製
     }
 
     private IEnumerator DelayedClear()
@@ -220,8 +233,8 @@ public class GameManager : MonoBehaviour
         if (currentLevelIndex + 1 < _levels.Count)
         {
             currentLevelIndex++;
-            StartCoroutine(MoveCameraToNextLevel()); // **確保攝影機移動**
-            StartCoroutine(LoadNextLevelAfterDelay()); // **等待攝影機移動完成後載入**
+            StartCoroutine(MoveCameraToNextLevel()); // 確保攝影機移動
+            StartCoroutine(LoadNextLevelAfterDelay()); // 等待攝影機移動完成後載入
         }
         else
         {
@@ -234,14 +247,14 @@ public class GameManager : MonoBehaviour
     {
         float elapsedTime = 0f;
 
-        // **記錄每個 Sprite 原始透明度**
+        // 記錄每個 Sprite 原始透明度
         Dictionary<SpriteRenderer, float> originalAlphas = new Dictionary<SpriteRenderer, float>();
 
         foreach (var sprite in sprites)
         {
-            originalAlphas[sprite] = sprite.color.a; // **紀錄原始透明度**
+            originalAlphas[sprite] = sprite.color.a; // 紀錄原始透明度
             Color tempColor = sprite.color;
-            tempColor.a = 0;  // **先把所有物件設為透明**
+            tempColor.a = 0;  // 先把所有物件設為透明
             sprite.color = tempColor;
         }
 
@@ -254,14 +267,14 @@ public class GameManager : MonoBehaviour
             {
                 Color tempColor = sprite.color;
 
-                // **原本 alpha = 1 的物件才會從 0 淡入**
+                // 原本 alpha = 1 的物件才會從 0 淡入
                 if (originalAlphas[sprite] == 1)
                 {
                     tempColor.a = alphaLerp;
                 }
                 else
                 {
-                    tempColor.a = 0; // **原本是 0 的保持透明**
+                    tempColor.a = 0; // 原本是 0 的保持透明
                 }
 
                 sprite.color = tempColor;
@@ -269,37 +282,35 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
 
-        // **確保最終透明度正確**
+        // 確保最終透明度正確
         foreach (var sprite in sprites)
         {
             Color tempColor = sprite.color;
-            tempColor.a = originalAlphas[sprite] == 1 ? 1 : 0; // **原本是 1 的變回 1，0 的保持 0**
+            tempColor.a = originalAlphas[sprite] == 1 ? 1 : 0; // 原本是 1 的變回 1，0 的保持 0
             sprite.color = tempColor;
         }
 
     }
 
-
-
-
-    // **延遲載入下一關，確保移動過程不會瞬間跳過**
+    // 延遲載入下一關，確保移動過程不會瞬間跳過
     private IEnumerator LoadNextLevelAfterDelay()
     {
-        yield return new WaitForSeconds(3.5f); // **等待攝影機移動 + 停頓時間**
-        LoadLevel(currentLevelIndex);
+        yield return new WaitForSeconds(3.5f); // 等待攝影機移動 + 停頓時間
+        LoadLevel(currentLevelIndex, true); // 傳遞 true 來標識是重新繪製
     }
 
     private IEnumerator MoveCameraToNextLevel()
     {
         if (currentLevelIndex + 1 >= _levels.Count || isCameraMoving)
-            yield break; // **如果已經是最後一關，或攝影機正在移動，就不執行**
+            yield break; // 如果已經是最後一關，或攝影機正在移動，就不執行
 
-        isCameraMoving = true; // **標記攝影機正在移動**
+        isCameraMoving = true; // 標記攝影機正在移動
+        isLevelTransitioning = true; // 標記關卡轉場
 
         Level nextLevel = _levels[currentLevelIndex + 1];
-        float targetY = nextLevel.Position.y + nextLevel.Row / 2f; // **確保新關卡在畫面正中央**
+        float targetY = nextLevel.Position.y + nextLevel.Row / 2f; // 確保新關卡在畫面正中央
 
-        float duration = 3f; // **延長時間，讓移動更平滑**
+        float duration = 3f; // 延長時間，讓移動更平滑
         float elapsedTime = 0f;
         Vector3 startPosition = Camera.main.transform.position;
         Vector3 targetPosition = new Vector3(startPosition.x, targetY, startPosition.z);
@@ -307,29 +318,30 @@ public class GameManager : MonoBehaviour
         while (elapsedTime < duration)
         {
             elapsedTime += Time.deltaTime;
-            float t = Mathf.SmoothStep(0, 1, elapsedTime / duration); // **使用 SmoothStep 確保平滑**
+            float t = Mathf.SmoothStep(0, 1, elapsedTime / duration); // 使用 SmoothStep 確保平滑
             Camera.main.transform.position = Vector3.Lerp(startPosition, targetPosition, t);
             yield return null;
         }
 
-        Camera.main.transform.position = targetPosition; // **確保最終位置正確**
+        Camera.main.transform.position = targetPosition; // 確保最終位置正確
 
-        yield return new WaitForSeconds(0.5f); // **等待 0.5 秒，確保畫面不會馬上切換**
+        yield return new WaitForSeconds(0.5f); // 等待 0.5 秒，確保畫面不會馬上切換
 
-        isCameraMoving = false; // **攝影機移動結束**
+        isCameraMoving = false; // 攝影機移動結束
+        isLevelTransitioning = false; // 標記關卡轉場結束
     }
 
     private IEnumerator WaitForTransitionToEnd()
     {
         if (transDemo != null)
         {
-            while (transDemo.IsTransitioning) // **確保轉場動畫正在播放**
+            while (transDemo.IsTransitioning) // 確保轉場動畫正在播放
             {
                 yield return null; // 等待下一幀
             }
         }
 
-        // **轉場動畫結束後顯示 Start Icon**
+        // 轉場動畫結束後顯示 Start Icon
         if (_levelManager != null)
         {
             ShowStartIcon();
