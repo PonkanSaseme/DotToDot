@@ -10,7 +10,7 @@ public class DragHandler : MonoBehaviour
     private bool isDragging = false;
 
     public RectTransform ticketTransform;
-    public float dragThreshold = 300f; // 觸發距離
+    public float dragThreshold = 50f; // 觸發距離
     public System.Action OnDragComplete; // 拖曳完成時觸發
 
     private void Awake()
@@ -25,6 +25,7 @@ public class DragHandler : MonoBehaviour
         touchPress.Enable();
         touchPosition.Enable();
         touchPress.started += ctx => StartDrag();
+        touchPress.performed += ctx => Dragging(); // 修正：加入拖曳事件
         touchPress.canceled += ctx => EndDrag();
     }
 
@@ -41,11 +42,10 @@ public class DragHandler : MonoBehaviour
         isDragging = true;
         Vector2 touchScreenPos = touchPosition.ReadValue<Vector2>();
 
-        // 轉換螢幕座標到 UI 座標
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
             ticketTransform.parent as RectTransform,
             touchScreenPos,
-            null,
+            Camera.main,
             out startTouchPos
         );
     }
@@ -65,8 +65,10 @@ public class DragHandler : MonoBehaviour
         );
 
         float deltaY = currentTouchPos.y - startTouchPos.y;
-        Vector2 newPos = startTouchPos + new Vector2(0, deltaY);
+        Vector2 newPos = ticketTransform.anchoredPosition;
+        newPos.y += deltaY; // 只修改 Y 軸，確保拖曳順暢
         ticketTransform.anchoredPosition = newPos;
+
 
         if (ticketTransform.anchoredPosition.y >= startTouchPos.y + dragThreshold)
         {
@@ -75,8 +77,35 @@ public class DragHandler : MonoBehaviour
         }
     }
 
+    private void Dragging()
+    {
+        if (!isDragging) return;
+
+        Vector2 touchScreenPos = touchPosition.ReadValue<Vector2>();
+
+        Vector2 currentTouchPos;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            ticketTransform.parent as RectTransform,
+            touchScreenPos,
+            Camera.main,
+            out currentTouchPos
+        );
+
+        float deltaY = currentTouchPos.y - startTouchPos.y;
+        Vector2 newPos = ticketTransform.anchoredPosition;
+        newPos.y += deltaY;
+        ticketTransform.anchoredPosition = newPos;
+
+        if (ticketTransform.anchoredPosition.y >= startTouchPos.y + dragThreshold)
+        {
+            isDragging = false;
+            OnDragComplete?.Invoke(); // 通知 GachaSystem 開始抽獎
+        }
+    }
+
     private void EndDrag()
     {
         isDragging = false;
+        GachaSystem.Instance.paperFadeAnim.SetTrigger("FadeIn");
     }
 }

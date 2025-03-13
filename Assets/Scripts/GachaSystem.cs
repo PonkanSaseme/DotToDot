@@ -8,14 +8,16 @@ public class GachaSystem : MonoBehaviour
     public static GachaSystem Instance;
 
     [Header("抽獎 UI 元件")]
-    [SerializeField] private GameObject gachaPanel;  // 抽獎視窗
+    [SerializeField] public GameObject gachaPanel;  // 抽獎視窗
     [SerializeField] private Image ticketImage;      // 紙條圖片
     [SerializeField] private Image rewardImage;      // 抽到的獎品圖片
     [SerializeField] private Text rewardText;        // 抽到的獎品文字
     [SerializeField] private Button closeButton;     // 關閉按鈕
+    [SerializeField] private GameObject resultScene; // 抽獎結果畫面
 
     [Header("拖曳控制")]
     [SerializeField] private RectTransform ticketTransform; // 紙條 RectTransform
+    [SerializeField] public Animator paperFadeAnim; // 拖入紙條動畫
     [SerializeField] private float dragThreshold = 150f; // 多少距離視為成功拖曳
 
     [Header("獎品圖案")]
@@ -53,7 +55,7 @@ public class GachaSystem : MonoBehaviour
     public void StartGacha()
     {
         gachaPanel.SetActive(true);
-        ticketTransform.anchoredPosition = startPos; // 重置紙條位置
+        ticketTransform.anchoredPosition = startPos;
         rewardImage.gameObject.SetActive(false);
         rewardText.gameObject.SetActive(false);
         closeButton.gameObject.SetActive(false);
@@ -64,20 +66,16 @@ public class GachaSystem : MonoBehaviour
     /// </summary>
     public void OnBeginDrag()
     {
-        isDragging = true;
         startPos = ticketTransform.anchoredPosition;
     }
 
     public void OnDrag(Vector2 dragPosition)
     {
-        if (!isDragging) return;
-
         ticketTransform.anchoredPosition += new Vector2(0, dragPosition.y);
 
         if (ticketTransform.anchoredPosition.y >= dragThreshold)
         {
-            isDragging = false;
-            StartCoroutine(ShowReward());
+            StartCoroutine(ShowReward()); // 開始抽獎流程
         }
     }
 
@@ -90,20 +88,24 @@ public class GachaSystem : MonoBehaviour
         rewardImage.sprite = (drawResult == "A") ? iconA : iconB;
         rewardText.text = "你抽到了 " + (drawResult == "A" ? "圖案 A" : "圖案 B");
 
-        rewardImage.gameObject.SetActive(true);
-        rewardText.gameObject.SetActive(true);
-        closeButton.gameObject.SetActive(true);
+        // 等待動畫完成
+        yield return new WaitForSeconds(paperFadeAnim.GetCurrentAnimatorStateInfo(0).length);
 
-        // 記錄結果
-        if (string.IsNullOrEmpty(firstDrawResult))
+        // 關閉抽獎畫面，開啟結果畫面
+        gachaPanel.SetActive(false);
+        resultScene.SetActive(true);
+        Debug.Log("開啟結果");
+
+        // 播放結果動畫（如果有）
+        Animator resultAnim = resultScene.GetComponent<Animator>();
+        if (resultAnim != null)
         {
-            firstDrawResult = drawResult;
+            resultAnim.SetTrigger("ShowResult");
         }
-        else
-        {
-            secondDrawResult = drawResult;
-            DetermineFinalReward();
-        }
+
+        // 進入下一關
+        yield return new WaitForSeconds(1.5f);
+        GameManager.Instance.RewardScene(); // 確保呼叫的是 RewardScene()
     }
 
     /// <summary>
@@ -112,7 +114,7 @@ public class GachaSystem : MonoBehaviour
     private string Draw()
     {
         float rand = UnityEngine.Random.value;
-        return (rand <= 0.5f) ? "A" : "B"; // 50% 機率
+        return (rand <= 0.5f) ? "A" : "B";
     }
 
     /// <summary>

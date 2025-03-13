@@ -203,7 +203,6 @@ public class GameManager : MonoBehaviour
         if (_levelManager != null)
         {
             _levelManager.OnLevelComplete -= HandleLevelComplete;
-            //_levelManager.OnFadeIn -= FadeIn;
             HideStartIcon(); // 清除 Start Icon
             _levelManager.CleanUp();
             _levelManager = null;
@@ -239,7 +238,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void RewardScene()
+    public void RewardScene()
     {
         currentLevelIndex++;
 
