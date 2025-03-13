@@ -112,8 +112,8 @@ public class GameManager : MonoBehaviour
         transDemo.enabled = true;
 
         TransitionScreenManager transition = FindObjectOfType<TransitionScreenManager>();
-
         // 確保不重複訂閱事件
+        
 
         transition.FinishedRevealEvent += Initialize;
     }
@@ -239,50 +239,32 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void RewardScene() {//抽獎獨立放一個custom class
+    private void RewardScene()
+    {
         currentLevelIndex++;
-        //抽獎放這邊，抽完獎才移動攝影機跟載入
-        StartCoroutine(MoveCameraToNextLevel()); // 確保攝影機移動
-        StartCoroutine(LoadNextLevelAfterDelay()); // 等待攝影機移動完成後載入
+
+        // 抽獎系統
+        GachaSystem.Instance.StartGacha();
+
+        if (currentLevelIndex + 1 < _levels.Count)
+        {
+            Level nextLevel = _levels[currentLevelIndex];
+            float targetY = nextLevel.Position.y + nextLevel.Row / 2f; // 計算新關卡的目標 Y 座標
+
+            // 呼叫 CameraMover 來移動攝影機，並在移動完成後載入下一關
+            CameraMover.Instance.MoveToNextLevel(targetY, () =>
+            {
+                StartCoroutine(LoadNextLevelAfterDelay()); // 移動結束後載入新關卡
+            });
+        }
     }
+
 
     // 延遲載入下一關，確保移動過程不會瞬間跳過
     private IEnumerator LoadNextLevelAfterDelay()
     {
         yield return new WaitForSeconds(3.5f); // 等待攝影機移動 + 停頓時間
         LoadLevel(currentLevelIndex, true); // 傳遞 true 來標識是重新繪製
-    }
-
-    private IEnumerator MoveCameraToNextLevel()//獨立出來一個Custom Class
-    {
-        if (currentLevelIndex + 1 >= _levels.Count || isCameraMoving)
-            yield break; // 如果已經是最後一關，或攝影機正在移動，就不執行
-
-        isCameraMoving = true; // 標記攝影機正在移動
-        isLevelTransitioning = true; // 標記關卡轉場
-
-        Level nextLevel = _levels[currentLevelIndex + 1];
-        float targetY = nextLevel.Position.y + nextLevel.Row / 2f; // 確保新關卡在畫面正中央
-
-        float duration = 3f; // 延長時間，讓移動更平滑
-        float elapsedTime = 0f;
-        Vector3 startPosition = Camera.main.transform.position;
-        Vector3 targetPosition = new Vector3(startPosition.x, targetY, startPosition.z);
-
-        while (elapsedTime < duration)
-        {
-            elapsedTime += Time.deltaTime;
-            float t = Mathf.SmoothStep(0, 1, elapsedTime / duration); // 使用 SmoothStep 確保平滑
-            Camera.main.transform.position = Vector3.Lerp(startPosition, targetPosition, t);
-            yield return null;
-        }
-
-        Camera.main.transform.position = targetPosition; // 確保最終位置正確
-
-        yield return new WaitForSeconds(0.5f); // 等待 0.5 秒，確保畫面不會馬上切換
-
-        isCameraMoving = false; // 攝影機移動結束
-        isLevelTransitioning = false; // 標記關卡轉場結束
     }
 
     private IEnumerator WaitForTransitionToEnd()
