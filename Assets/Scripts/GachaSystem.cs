@@ -34,7 +34,7 @@ public class GachaSystem : MonoBehaviour
     public bool ShowResult = false;
 
     public event Action<string> OnRewardSelected; // 當獎勵選定時觸發
-    Animator paperControl;
+    Animator parentAnimator;
     Animator resultAnim;
 
     public event Action OnNextLevel;
@@ -56,32 +56,25 @@ public class GachaSystem : MonoBehaviour
     public void StartGacha() //開始抽獎流程
     {
 
-        paperControl = paperAnim.GetComponent<Animator>();
+        parentAnimator = gachaPanel.GetComponent<Animator>();
 
-        paperControl.Play("PaperDragAnim");
+        parentAnimator.Play("PaperDragAnim");
 
         StartCoroutine(CheckAniEnd());
     }
 
     private IEnumerator CheckAniEnd()
     {
-        while (!paperControl.GetCurrentAnimatorStateInfo(0).IsName("paperFadeAnim")) 
+        while (!parentAnimator.GetCurrentAnimatorStateInfo(0).IsName("GachaFadeOutAnim")) 
         {
             yield return null;
         }
-        while (paperControl.GetCurrentAnimatorStateInfo(0).normalizedTime<1)
+        while (parentAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime<1)
         {
             yield return null;
         }
 
-        Animator parentAnimator = gachaPanel.GetComponent<Animator>();
-        parentAnimator.Play("GachaFadeOutAnim");
-
-        while ( parentAnimator.GetCurrentAnimatorStateInfo(0).IsName("GachaFadeOutAnim") || parentAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1)
-        {
-            yield return null;
-        }
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.25f);
         StartCoroutine(ShowReward());
     }
 

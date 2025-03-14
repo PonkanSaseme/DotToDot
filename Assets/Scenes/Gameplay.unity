@@ -362,7 +362,6 @@ GameObject:
   - component: {fileID: 156613528}
   - component: {fileID: 156613530}
   - component: {fileID: 156613529}
-  - component: {fileID: 156613531}
   - component: {fileID: 156613534}
   m_Layer: 5
   m_Name: paper
@@ -430,26 +429,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 156613527}
   m_CullTransparentMesh: 1
---- !u!95 &156613531
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 156613527}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: f07c1ca864e1b9f4a95a85078c51617a, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
 --- !u!114 &156613534
 MonoBehaviour:
   m_ObjectHideFlags: 0
