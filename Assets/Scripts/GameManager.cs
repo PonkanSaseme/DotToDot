@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Cell _cellPrefab;
     [SerializeField] private Transform _edgePrefab;
     [SerializeField] private Transform _parentContainer; // 最上層的父物件，管理所有關卡
-    [SerializeField] private InputAction press, screenPos;
+    [SerializeField] public InputAction press, screenPos;
 
     [SerializeField] private GameObject transition; //轉場
     [SerializeField] private GameObject startScene; //開始畫面
@@ -228,9 +228,7 @@ public class GameManager : MonoBehaviour
 
         if (currentLevelIndex + 1 < _levels.Count)
         {
-            RewardScene();
-            GachaSystem.Instance.isDragging = true;
-            GachaSystem.Instance.paperFadeAnim.SetTrigger("FadeIn");
+            StartCoroutine(RewardScene());
 
             Debug.Log("開啟結果");
         }
@@ -241,12 +239,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void RewardScene()
+    public IEnumerator RewardScene()
     {
         currentLevelIndex++;
 
+        yield return new WaitForSeconds(0.5f);
+
         // 抽獎系統
-        GachaSystem.Instance.StartGacha();
+        GachaSystem.Instance.gachaPanel.SetActive(true); //開啟點擊紙條頁;
 
         if (currentLevelIndex + 1 < _levels.Count)
         {

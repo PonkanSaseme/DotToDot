@@ -37,7 +37,7 @@ public class DragHandler : MonoBehaviour
         touchPosition.Disable();
     }
 
-    private void StartDrag()
+    private void StartDrag() //開始拖曳(按住)
     {
         isDragging = true;
         Vector2 touchScreenPos = touchPosition.ReadValue<Vector2>();
@@ -50,7 +50,7 @@ public class DragHandler : MonoBehaviour
         );
     }
 
-    private void Update()
+    private void Update() //持續偵測
     {
         if (!isDragging) return;
 
@@ -77,7 +77,7 @@ public class DragHandler : MonoBehaviour
         }
     }
 
-    private void Dragging()
+    private void Dragging() //拖曳動作(拖曳中)
     {
         if (!isDragging) return;
 
@@ -103,7 +103,7 @@ public class DragHandler : MonoBehaviour
         }
     }
 
-    private void EndDrag()
+    private void EndDrag() //拖曳結束(放開)
     {
         isDragging = false;
     }
