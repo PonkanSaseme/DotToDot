@@ -106,6 +106,5 @@ public class DragHandler : MonoBehaviour
     private void EndDrag()
     {
         isDragging = false;
-        GachaSystem.Instance.paperFadeAnim.SetTrigger("FadeIn");
     }
 }

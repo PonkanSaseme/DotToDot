@@ -13,7 +13,7 @@ public class GachaSystem : MonoBehaviour
     [SerializeField] private Image rewardImage;      // 抽到的獎品圖片
     [SerializeField] private Text rewardText;        // 抽到的獎品文字
     [SerializeField] private Button closeButton;     // 關閉按鈕
-    [SerializeField] private GameObject resultScene; // 抽獎結果畫面
+    [SerializeField] public GameObject resultScene; // 抽獎結果畫面
 
     [Header("拖曳控制")]
     [SerializeField] private RectTransform ticketTransform; // 紙條 RectTransform
@@ -32,7 +32,7 @@ public class GachaSystem : MonoBehaviour
     private string firstDrawResult = "";
     private string secondDrawResult = "";
 
-    private bool isDragging = false;
+    public bool isDragging = false;
     private Vector2 startPos;
 
     public event Action<string> OnRewardSelected; // 當獎勵選定時觸發

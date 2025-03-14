@@ -229,7 +229,10 @@ public class GameManager : MonoBehaviour
         if (currentLevelIndex + 1 < _levels.Count)
         {
             RewardScene();
+            GachaSystem.Instance.isDragging = true;
+            GachaSystem.Instance.paperFadeAnim.SetTrigger("FadeIn");
 
+            Debug.Log("開啟結果");
         }
         else
         {
