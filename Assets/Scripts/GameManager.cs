@@ -56,6 +56,8 @@ public class GameManager : MonoBehaviour
         press.performed += OnTouchPerformed;
         // 放開滑鼠/觸控結束
         press.canceled += OnTouchCanceled;
+
+
     }
 
     private void OnDisable()
@@ -64,6 +66,9 @@ public class GameManager : MonoBehaviour
         press.started -= OnTouchStarted;
         press.performed -= OnTouchPerformed;
         press.canceled -= OnTouchCanceled;
+
+        GachaSystem.Instance.OnNextLevel -= GoToNextLevel;
+
         press.Disable();
         screenPos.Disable();
 
@@ -113,9 +118,9 @@ public class GameManager : MonoBehaviour
 
         TransitionScreenManager transition = FindObjectOfType<TransitionScreenManager>();
         // 確保不重複訂閱事件
-        
 
         transition.FinishedRevealEvent += Initialize;
+        GachaSystem.Instance.OnNextLevel += GoToNextLevel;
     }
 
     private void Initialize()
@@ -248,6 +253,12 @@ public class GameManager : MonoBehaviour
         // 抽獎系統
         GachaSystem.Instance.gachaPanel.SetActive(true); //開啟點擊紙條頁;
 
+
+    }
+
+    private void GoToNextLevel()
+    {
+        Debug.Log("NextLevel");
         if (currentLevelIndex + 1 < _levels.Count)
         {
             Level nextLevel = _levels[currentLevelIndex];
@@ -258,9 +269,10 @@ public class GameManager : MonoBehaviour
             {
                 StartCoroutine(LoadNextLevelAfterDelay()); // 移動結束後載入新關卡
             });
+
+            GachaSystem.Instance.resultScene.SetActive(false);
         }
     }
-
 
     // 延遲載入下一關，確保移動過程不會瞬間跳過
     private IEnumerator LoadNextLevelAfterDelay()

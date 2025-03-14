@@ -13,7 +13,7 @@ public class GachaSystem : MonoBehaviour
     [SerializeField] private Image rewardImage;      // 抽到的獎品圖片
     [SerializeField] private Text rewardText;        // 抽到的獎品文字
     [SerializeField] private Button closeButton;     // 關閉按鈕
-    [SerializeField] public GameObject resultScene; // 抽獎結果畫面
+    public GameObject resultScene; // 抽獎結果畫面
 
     [Header("動畫元件")]
     [SerializeField] private GameObject paperAnim;  // 抽獎動畫
@@ -36,6 +36,8 @@ public class GachaSystem : MonoBehaviour
     public event Action<string> OnRewardSelected; // 當獎勵選定時觸發
     Animator paperControl;
     Animator resultAnim;
+
+    public event Action OnNextLevel;
     private void Awake()
     {
         if (Instance == null)
@@ -110,6 +112,7 @@ public class GachaSystem : MonoBehaviour
     public void CloseResult()
     {
         resultAnim.Play("ResultFadeOutAnim");
+        OnNextLevel?.Invoke();
     }
 
     /// <summary>
