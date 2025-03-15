@@ -241,6 +241,8 @@ public class GameManager : MonoBehaviour
         {
             Debug.Log("All Levels Complete!");
             // 可以在這裡添加通關後的處理邏輯
+            string result = GachaSystem.Instance.Draw();
+            Debug.Log("抽獎結果: " + result);
         }
     }
 
