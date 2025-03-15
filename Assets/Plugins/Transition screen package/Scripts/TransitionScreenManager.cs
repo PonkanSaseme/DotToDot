@@ -49,7 +49,6 @@ namespace TransitionScreenPackage
         public void OnFinishedRevealAnimation()
         {
             //Ĳ�o�ƥ�A�q����L�t������w����
-            Debug.Log("Reveal");
             FinishedRevealEvent?.Invoke();
         }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using System.IO;
 
 public class GachaSystem : MonoBehaviour
 {
@@ -32,6 +33,10 @@ public class GachaSystem : MonoBehaviour
     [SerializeField] private Sprite rewardDango;   // 糰子
     [SerializeField] private Sprite rewardBalloon; // 小氣球
     [SerializeField] private Sprite rewardStamp;   // 小郵票
+
+    [Header("紀錄資訊")]
+    [SerializeField] private Text timeStamp;   // 時間戳記
+    [SerializeField] private Text enterID;   // 玩家輸入ID
 
     List<Sprite> rewardSprites = new List<Sprite>();
 
@@ -93,7 +98,6 @@ public class GachaSystem : MonoBehaviour
         // 關閉抽獎畫面，開啟結果畫面
         gachaPanel.SetActive(false);
         resultScene.SetActive(true);
-        Debug.Log($"開啟結果 {drawResult}");
 
         // 播放結果動畫（如果有）
         resultAnim = resultScene.GetComponent<Animator>();
@@ -134,7 +138,6 @@ public class GachaSystem : MonoBehaviour
             cumulative += prize.Item2;
             if (rand < cumulative)
             {
-                Debug.Log($"抽獎結果: {prize.Item1}");
                 DetermineFinalReward(prize.Item1);
                 return prize.Item1;
             }
@@ -191,17 +194,43 @@ public class GachaSystem : MonoBehaviour
         rewardImage.sprite = selectedIcon;
         rewardText.text = "你抽到了 圖案 " + drawResult;
 
-        SaveToCloud(finalReward);
+        SaveData(finalReward);
         OnRewardSelected?.Invoke(finalReward);
     }
 
-    /// 存儲抽獎結果到雲端
-    private void SaveToCloud(string reward)
+    /// 存儲抽獎輸出到記事本
+    public void SaveData(string reward)
     {
         PlayerPrefs.SetString("FinalReward", reward);
         PlayerPrefs.SetString("Timestamp", DateTime.Now.ToString());
         PlayerPrefs.Save();
+
+        timeStamp.text = DateTime.Now.ToString();
+
+        // 檔案輸出
+        SaveToFile(reward);
         Debug.Log("已儲存獎勵: " + reward);
+    }
+
+    /// <summary>
+    /// 將獎勵資訊寫入 txt 檔案
+    /// </summary>
+    private void SaveToFile(string reward)
+    {
+        string path = Path.Combine(Application.persistentDataPath, "抽獎結果.txt");
+
+        try
+        {
+            using (StreamWriter writer = new StreamWriter(path, true)) // `true` 表示以追加模式寫入
+            {
+                writer.WriteLine($"{DateTime.Now}: {reward}");
+            }
+            Debug.Log($"獎勵已存入檔案: {path}");
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("寫入檔案失敗: " + e.Message);
+        }
     }
 
     // 獲取所有儲存的獎勵

@@ -24,6 +24,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private Image firstRewardImage;  // 第一個獎勵圖片
     [SerializeField] private Image secondRewardImage; // 第二個獎勵圖片
+    [SerializeField] private Text firstRewardText;  // 第一個獎勵文字
+    [SerializeField] private Text secondRewardText; // 第二個獎勵文字
 
     [SerializeField] private TransitionScreenDemo transDemo;
 
@@ -171,10 +173,6 @@ public class GameManager : MonoBehaviour
             // 等待轉場動畫結束後再顯示 startIcon
             StartCoroutine(WaitForTransitionToEnd());
         }
-        else
-        {
-            ShowStartIcon();
-        }
     }
 
     private void Update()
@@ -288,11 +286,13 @@ public class GameManager : MonoBehaviour
         if (rewards.Count > 0)
         {
             firstRewardImage.sprite = rewards[0];
+            firstRewardText.text = rewards[0].name;
         }
 
         if (rewards.Count > 1)
         {
             secondRewardImage.sprite = rewards[1];
+            secondRewardText.text = rewards[1].name;
         }
     }
 
@@ -309,7 +309,8 @@ public class GameManager : MonoBehaviour
         {
             while (transDemo.IsTransitioning) // 確保轉場動畫正在播放
             {
-                yield return null; // 等待下一幀
+                ShowStartIcon();
+                yield return new WaitForSeconds(0.05f); // 等待下一幀
             }
         }
     }
@@ -324,11 +325,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void HideStartIcon()
+    public void HideStartIcon()
     {
-        if (startIcon != null)
-        {
-            startIcon.SetActive(false);
-        }
+        startIcon.SetActive(false);
     }
 }
