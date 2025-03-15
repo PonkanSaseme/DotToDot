@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
@@ -8,11 +9,12 @@ public class GachaSystem : MonoBehaviour
     public static GachaSystem Instance;
 
     [Header("抽獎 UI 元件")]
-     public GameObject gachaPanel;  // 抽獎視窗
+    public GameObject gachaPanel;  // 抽獎視窗
     [SerializeField] private Image ticketImage;      // 紙條圖片
     [SerializeField] private Image rewardImage;      // 抽到的獎品圖片
     [SerializeField] private Image finalRewardImage; // 最終獎品圖片
     [SerializeField] private Text finalRewardText; // 最終獎品文字
+    string finalReward = "";
     [SerializeField] private Text rewardText;        // 抽到的獎品文字
     [SerializeField] private Button closeButton;     // 關閉按鈕
     public GameObject resultScene; // 抽獎結果畫面
@@ -31,20 +33,18 @@ public class GachaSystem : MonoBehaviour
     [SerializeField] private Sprite rewardBalloon; // 小氣球
     [SerializeField] private Sprite rewardStamp;   // 小郵票
 
-    string finalReward = "";
-    Sprite rewardSprite = null;
+    List<Sprite> rewardSprites = new List<Sprite>();
 
     public event Action<string> OnRewardSelected; // 當獎勵選定時觸發
     Animator parentAnimator;
     Animator resultAnim;
 
-
     public event Action OnNextLevel;
+
     private void Awake()
     {
         if (Instance == null)
             Instance = this;
-
     }
 
     private void Start()
@@ -57,21 +57,18 @@ public class GachaSystem : MonoBehaviour
     /// </summary>
     public void StartGacha() //開始抽獎流程
     {
-
         parentAnimator = gachaPanel.GetComponent<Animator>();
-
         parentAnimator.Play("PaperDragAnim");
-
         StartCoroutine(CheckAniEnd());
     }
 
     private IEnumerator CheckAniEnd()
     {
-        while (!parentAnimator.GetCurrentAnimatorStateInfo(0).IsName("GachaFadeOutAnim")) 
+        while (!parentAnimator.GetCurrentAnimatorStateInfo(0).IsName("GachaFadeOutAnim"))
         {
             yield return null;
         }
-        while (parentAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime<1)
+        while (parentAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1)
         {
             yield return null;
         }
@@ -96,11 +93,10 @@ public class GachaSystem : MonoBehaviour
         // 關閉抽獎畫面，開啟結果畫面
         gachaPanel.SetActive(false);
         resultScene.SetActive(true);
-        Debug.Log( $"開啟結果 {drawResult}");
+        Debug.Log($"開啟結果 {drawResult}");
 
         // 播放結果動畫（如果有）
         resultAnim = resultScene.GetComponent<Animator>();
-
     }
 
     public void CloseResult()
@@ -113,7 +109,7 @@ public class GachaSystem : MonoBehaviour
     public string Draw()
     {
         // 定義獎項和對應的機率
-        (string, float)[] prizes = new (string, float)[]
+        (string, float)[] prizes = new (string, float)[] //0~1之間去分配機率
         {
             ("AA", 0.01f),
             ("BB", 0.07f),
@@ -127,7 +123,7 @@ public class GachaSystem : MonoBehaviour
         };
 
         float rand = UnityEngine.Random.value; // 取得 0~1 之間的隨機數
-        float cumulative = 0f;
+        float cumulative = 0f; //累積數字
 
         foreach (var prize in prizes)
         {
@@ -135,6 +131,7 @@ public class GachaSystem : MonoBehaviour
             if (rand < cumulative)
             {
                 Debug.Log($"抽獎結果: {prize.Item1}");
+                DetermineFinalReward(prize.Item1);
                 return prize.Item1;
             }
         }
@@ -150,17 +147,17 @@ public class GachaSystem : MonoBehaviour
         if (drawResult == "AA")
         {
             finalReward = "糰子";
-            rewardSprite = rewardDango;
+            rewardSprites.Add(rewardDango);
         }
         else if (drawResult == "BB")
         {
             finalReward = "小氣球";
-            rewardSprite = rewardBalloon;
+            rewardSprites.Add(rewardBalloon);
         }
         else
         {
             finalReward = "小郵票";
-            rewardSprite = rewardStamp;
+            rewardSprites.Add(rewardStamp);
         }
 
         Sprite selectedIcon = drawResult switch
@@ -169,10 +166,22 @@ public class GachaSystem : MonoBehaviour
             "BB" => iconB,
             "CC" => iconC,
             "DD" => iconD,
-            _ => (drawResult[0] == 'A') ? iconA :
-                 (drawResult[0] == 'B') ? iconB :
-                 (drawResult[0] == 'C') ? iconC :
-                 iconD
+            "AB" => iconD,
+            "BA" => iconD,
+            "AC" => iconC,
+            "CA" => iconC,
+            "AD" => iconD,
+            "DA" => iconD,
+            "BC" => iconC,
+            "CB" => iconC,
+            "BD" => iconD,
+            "DB" => iconD,
+            "CD" => iconD,
+            "DC" => iconD,
+            _ => drawResult.Contains("C") ? iconC :
+                 drawResult.Contains("D") ? iconD :
+                 drawResult.Contains("A") ? iconA :
+                 iconB
         };
 
         rewardImage.sprite = selectedIcon;
@@ -182,7 +191,6 @@ public class GachaSystem : MonoBehaviour
         OnRewardSelected?.Invoke(finalReward);
     }
 
-
     /// 存儲抽獎結果到雲端
     private void SaveToCloud(string reward)
     {
@@ -190,5 +198,11 @@ public class GachaSystem : MonoBehaviour
         PlayerPrefs.SetString("Timestamp", DateTime.Now.ToString());
         PlayerPrefs.Save();
         Debug.Log("已儲存獎勵: " + reward);
+    }
+
+    // 獲取所有儲存的獎勵
+    public List<Sprite> GetRewards()
+    {
+        return rewardSprites;
     }
 }

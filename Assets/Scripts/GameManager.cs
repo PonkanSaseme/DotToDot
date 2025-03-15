@@ -19,7 +19,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject transition; //轉場
     [SerializeField] private GameObject startScene; //開始畫面
     [SerializeField] private GameObject startIcon; // **拖入動畫 Image**
-    [SerializeField] private GameObject _rulePrefab;
+    [SerializeField] private GameObject _rulePrefab; //規則頁
+    [SerializeField] private GameObject _finalResultScene; //最終結果頁
+
+    [SerializeField] private Image firstRewardImage;  // 第一個獎勵圖片
+    [SerializeField] private Image secondRewardImage; // 第二個獎勵圖片
 
     [SerializeField] private TransitionScreenDemo transDemo;
 
@@ -42,6 +46,8 @@ public class GameManager : MonoBehaviour
     {
         Instance = this;
         hasGameStart = false;
+        firstRewardImage.sprite = null;
+        secondRewardImage.sprite = null;
     }
 
     private void OnEnable()
@@ -234,15 +240,17 @@ public class GameManager : MonoBehaviour
         if (currentLevelIndex + 1 < _levels.Count)
         {
             StartCoroutine(RewardScene());
-
             Debug.Log("開啟結果");
         }
         else
         {
             Debug.Log("All Levels Complete!");
-            // 可以在這裡添加通關後的處理邏輯
+            // 通關後的處理邏輯(第三關結束)
             string result = GachaSystem.Instance.Draw();
             Debug.Log("抽獎結果: " + result);
+
+            _finalResultScene.SetActive(true);
+            _finalResultScene.GetComponent<Animator>().Play("FinalResultAnim");
         }
     }
 
@@ -273,6 +281,22 @@ public class GameManager : MonoBehaviour
             });
 
             GachaSystem.Instance.resultScene.SetActive(false);
+        }
+    }
+
+    //最終結果頁的顯示先前結果
+    public void DisplayRewards()
+    {
+        List<Sprite> rewards = GachaSystem.Instance.GetRewards();
+
+        if (rewards.Count > 0)
+        {
+            firstRewardImage.sprite = rewards[0];
+        }
+
+        if (rewards.Count > 1)
+        {
+            secondRewardImage.sprite = rewards[1];
         }
     }
 
