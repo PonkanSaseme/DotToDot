@@ -97,6 +97,10 @@ public class GachaSystem : MonoBehaviour
 
         // 播放結果動畫（如果有）
         resultAnim = resultScene.GetComponent<Animator>();
+
+        // 更新最終結果圖片
+        finalRewardImage.sprite = rewardSprites[rewardSprites.Count - 1];
+        finalRewardText.text = finalReward;
     }
 
     public void CloseResult()

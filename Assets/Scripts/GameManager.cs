@@ -62,8 +62,6 @@ public class GameManager : MonoBehaviour
         press.performed += OnTouchPerformed;
         // 放開滑鼠/觸控結束
         press.canceled += OnTouchCanceled;
-
-
     }
 
     private void OnDisable()
@@ -77,7 +75,6 @@ public class GameManager : MonoBehaviour
 
         press.Disable();
         screenPos.Disable();
-
     }
 
     private void OnTouchStarted(InputAction.CallbackContext context)
@@ -149,7 +146,6 @@ public class GameManager : MonoBehaviour
         hasGameStart = true;
 
         LoadLevel(currentLevelIndex);
-
     }
 
     private void LoadLevel(int levelIndex, bool redraw = false)
@@ -196,7 +192,6 @@ public class GameManager : MonoBehaviour
             _levelManager.HandleTouchMove(endPos);
         }
     }
-
 
     private void ClearPreviousLevel()
     {
@@ -251,6 +246,9 @@ public class GameManager : MonoBehaviour
 
             _finalResultScene.SetActive(true);
             _finalResultScene.GetComponent<Animator>().Play("FinalResultAnim");
+
+            // 顯示最終結果
+            DisplayRewards();
         }
     }
 
@@ -262,8 +260,6 @@ public class GameManager : MonoBehaviour
 
         // 抽獎系統
         GachaSystem.Instance.gachaPanel.SetActive(true); //開啟點擊紙條頁;
-
-
     }
 
     private void GoToNextLevel()
@@ -316,7 +312,6 @@ public class GameManager : MonoBehaviour
                 yield return null; // 等待下一幀
             }
         }
-
     }
 
     private void ShowStartIcon()
