@@ -776,11 +776,11 @@ PlayerSettings:
   webGLTemplate: APPLICATION:Default
   webGLAnalyzeBuildSize: 0
   webGLUseEmbeddedResources: 0
-  webGLCompressionFormat: 0
+  webGLCompressionFormat: 1
   webGLWasmArithmeticExceptions: 0
   webGLLinkerTarget: 1
   webGLThreadsSupport: 0
-  webGLDecompressionFallback: 0
+  webGLDecompressionFallback: 1
   webGLPowerPreference: 2
   scriptingDefineSymbols: {}
   additionalCompilerArguments: {}
@@ -872,11 +872,11 @@ PlayerSettings:
   apiCompatibilityLevel: 6
   activeInputHandler: 1
   windowsGamepadBackendHint: 0
-  cloudProjectId: bf177768-5e33-4267-ac2d-5d96b1c6241f
+  cloudProjectId: f15d0a9e-21f6-4108-9564-98ffcdfe11c8
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: DotToDot
-  organizationId: floras
+  projectName: DotToDot 2025-03-15_13-03-30
+  organizationId: ponkansaseme
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   playerDataPath: 
