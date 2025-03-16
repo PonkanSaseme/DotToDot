@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI; // 引入 UI 命名空間
 using TransitionScreenPackage;
 using TransitionScreenPackage.Demo;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -18,14 +19,11 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private GameObject transition; //轉場
     [SerializeField] private GameObject startScene; //開始畫面
+    [SerializeField] private GameObject backgroundScene; //背景圖
     [SerializeField] private GameObject startIcon; // **拖入動畫 Image**
     [SerializeField] private GameObject _rulePrefab; //規則頁
     [SerializeField] private GameObject _finalResultScene; //最終結果頁
 
-    [SerializeField] private Image firstRewardImage;  // 第一個獎勵圖片
-    [SerializeField] private Image secondRewardImage; // 第二個獎勵圖片
-    [SerializeField] private Text firstRewardText;  // 第一個獎勵文字
-    [SerializeField] private Text secondRewardText; // 第二個獎勵文字
 
     [SerializeField] private TransitionScreenDemo transDemo;
 
@@ -44,12 +42,12 @@ public class GameManager : MonoBehaviour
     private bool isRedraw = false;
     private bool isLevelTransitioning = false; // 新增標識
 
+    private bool hasGamePass = false;
+
     private void Awake()
     {
         Instance = this;
         hasGameStart = false;
-        firstRewardImage.sprite = null;
-        secondRewardImage.sprite = null;
     }
 
     private void OnEnable()
@@ -81,7 +79,7 @@ public class GameManager : MonoBehaviour
 
     private void OnTouchStarted(InputAction.CallbackContext context)
     {
-        if (!hasGameStart || hasGameFinished) return; // 確保遊戲已開始且未結束
+        if (!hasGameStart || hasGameFinished || hasGamePass) return; // 確保遊戲已開始且未結束
 
         // 確保 _levelManager 已經被初始化
         if (_levelManager == null)
@@ -101,7 +99,7 @@ public class GameManager : MonoBehaviour
 
     private void OnTouchPerformed(InputAction.CallbackContext context)
     {
-        if (!hasGameStart || hasGameFinished) return; // 確保遊戲已開始且未結束
+        if (!hasGameStart || hasGameFinished || hasGamePass) return; // 確保遊戲已開始且未結束
 
         // 確保 _levelManager 已經被初始化
         if (_levelManager == null)
@@ -113,6 +111,8 @@ public class GameManager : MonoBehaviour
     private void OnTouchCanceled(InputAction.CallbackContext context)
     {
         isPressing = false;
+        if (!hasGameStart || hasGameFinished||hasGamePass) return;
+
         StartCoroutine(DelayedClear());
     }
 
@@ -130,7 +130,6 @@ public class GameManager : MonoBehaviour
 
     private void Initialize()
     {
-        Debug.Log("Init");
         // 確保 parent 父物件開啟
         _parentContainer.gameObject.SetActive(true);
         if (_levelManager != null)
@@ -144,6 +143,7 @@ public class GameManager : MonoBehaviour
     public void OnRuleClick()
     {
         _rulePrefab.SetActive(false);
+        backgroundScene.SetActive(true);
         hasGameFinished = false;
         hasGameStart = true;
 
@@ -154,12 +154,12 @@ public class GameManager : MonoBehaviour
     {
         if (levelIndex < 0 || levelIndex >= _levels.Count)
         {
-            Debug.LogWarning("無效的關卡索引！");
             return;
         }
 
         isRedraw = redraw; // 設置標識
         isLevelTransitioning = false; // 重置標識
+        hasGamePass = false;
 
         ClearPreviousLevel(); // 清理舊關卡
 
@@ -227,26 +227,23 @@ public class GameManager : MonoBehaviour
 
     private void HandleLevelComplete()
     {
-        Debug.Log("Level Complete!");
         hasGameFinished = true;
+        hasGamePass = true;
 
         if (currentLevelIndex + 1 < _levels.Count)
         {
             StartCoroutine(RewardScene());
-            Debug.Log("開啟結果");
         }
         else
         {
-            Debug.Log("All Levels Complete!");
             // 通關後的處理邏輯(第三關結束)
-            string result = GachaSystem.Instance.Draw();
-            Debug.Log("抽獎結果: " + result);
-
             _finalResultScene.SetActive(true);
             _finalResultScene.GetComponent<Animator>().Play("FinalResultAnim");
 
             // 顯示最終結果
-            DisplayRewards();
+
+            GachaSystem.Instance.FinalReward();
+
         }
     }
 
@@ -257,17 +254,17 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
 
         // 抽獎系統
-        GachaSystem.Instance.gachaPanel.SetActive(true); //開啟點擊紙條頁;
+        GachaSystem.Instance.OpenGacha(currentLevelIndex);
+
     }
 
     private void GoToNextLevel()
     {
-        Debug.Log("NextLevel");
-        if (currentLevelIndex + 1 < _levels.Count)
+
+        if (currentLevelIndex + 1 <= _levels.Count)
         {
             Level nextLevel = _levels[currentLevelIndex];
             float targetY = nextLevel.Position.y + nextLevel.Row / 2f; // 計算新關卡的目標 Y 座標
-
             // 呼叫 CameraMover 來移動攝影機，並在移動完成後載入下一關
             CameraMover.Instance.MoveToNextLevel(targetY, () =>
             {
@@ -278,28 +275,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    //最終結果頁的顯示先前結果
-    public void DisplayRewards()
-    {
-        List<Sprite> rewards = GachaSystem.Instance.GetRewards();
-
-        if (rewards.Count > 0)
-        {
-            firstRewardImage.sprite = rewards[0];
-            firstRewardText.text = rewards[0].name;
-        }
-
-        if (rewards.Count > 1)
-        {
-            secondRewardImage.sprite = rewards[1];
-            secondRewardText.text = rewards[1].name;
-        }
-    }
-
     // 延遲載入下一關，確保移動過程不會瞬間跳過
     private IEnumerator LoadNextLevelAfterDelay()
     {
-        yield return new WaitForSeconds(3.5f); // 等待攝影機移動 + 停頓時間
+        yield return new WaitForSeconds(1.5f); // 等待攝影機移動 + 停頓時間
+        hasGameFinished = false;
         LoadLevel(currentLevelIndex, true); // 傳遞 true 來標識是重新繪製
     }
 

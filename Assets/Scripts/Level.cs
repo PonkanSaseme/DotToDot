@@ -16,6 +16,7 @@ public class Level : ScriptableObject
     [Header("自訂生成位置")]
     public Vector2 Position; //允許在 Inspector 內設定 Level 的生成座標
 
+
     private void OnValidate()
     {
         int totalCells = Row * Col;

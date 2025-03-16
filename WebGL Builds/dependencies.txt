@@ -2,7 +2,7 @@ com.unity.connect.share@4.2.3
 com.unity.feature.2d@1.0.0
 com.unity.ide.visualstudio@2.0.20
 com.unity.inputsystem@1.4.4
-com.unity.textmeshpro@3.0.6
+com.unity.textmeshpro@3.0.9
 com.unity.timeline@1.6.5
 com.unity.ugui@1.0.0
 com.unity.modules.ai@1.0.0
@@ -36,4 +36,4 @@ com.unity.modules.video@1.0.0
 com.unity.modules.vr@1.0.0
 com.unity.modules.wind@1.0.0
 com.unity.modules.xr@1.0.0
-DotToDot@1.3
+DotToDot@1.5

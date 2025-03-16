@@ -58,12 +58,28 @@ public class LevelManager
         }
     }
 
+    /// <summary>
+    /// ¦^Âk®y¼Ð
+    /// </summary>
+    /// <param name="Pos"></param>
+    /// <returns></returns>
+    private Vector2Int RealPos(Vector2 Pos)
+    {
+        Vector2 pos = new Vector2(Pos.x - _level.Position.y, Pos.y - _level.Position.x);
+
+        return new Vector2Int((int)pos.x,(int)pos.y);
+    }
+
     public void HandleTouchStart(Vector2Int startPos)
     {
-        if (!IsValid(startPos)) return;
-        if (startPos != _level.StartPosition) return;
 
-        if (_cells[startPos.x, startPos.y] is Cell cell)
+        Vector2Int realStartPos = RealPos(startPos);
+
+        if (!IsValid(realStartPos)) return;
+        
+        if (realStartPos != _level.StartPosition) return;
+
+        if (_cells[realStartPos.x, realStartPos.y] is Cell cell)
         {
             cell.Add();
         }
@@ -73,28 +89,31 @@ public class LevelManager
         }
 
         _filledPoints.Clear();
-        _filledPoints.Add(startPos);
+        _filledPoints.Add(realStartPos);
     }
 
     public void HandleTouchMove(Vector2Int endPos)
     {
-        if (!IsValid(endPos) || _filledPoints.Count == 0)
+
+        Vector2Int realEndPos = RealPos(endPos);
+
+        if (!IsValid(realEndPos) || _filledPoints.Count == 0)
         {
             return;
         }
 
         Vector2Int startPos = _filledPoints[_filledPoints.Count - 1];
 
-        if (!IsNeighbour(startPos, endPos))
+        if (!IsNeighbour(startPos, realEndPos))
         {
             return;
         }
 
-        if (!_cells[endPos.x, endPos.y].Filled)
+        if (!_cells[realEndPos.x, realEndPos.y].Filled)
         {
-            _filledPoints.Add(endPos);
-            _cells[endPos.x, endPos.y].Add();
-            SpawnEdge(startPos, endPos);
+            _filledPoints.Add(realEndPos);
+            _cells[realEndPos.x, realEndPos.y].Add();
+            SpawnEdge(startPos, realEndPos);
         }
 
         CheckWin();
@@ -187,8 +206,8 @@ public class LevelManager
     public Vector3 GetStartIconPosition()
     {
         return new Vector3(
-            _level.StartPosition.y + 0.5f, // X ¶b (Col)
-            _level.StartPosition.x + 0.5f, // Y ¶b (Row)
+            _level.StartPosition.y +_level.Position.x + 0.5f, // X ¶b (Col)
+            _level.StartPosition.x +_level.Position.y +0.5f, // Y ¶b (Row)
             0
         );
     }

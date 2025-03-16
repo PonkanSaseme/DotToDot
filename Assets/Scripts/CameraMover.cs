@@ -7,6 +7,8 @@ public class CameraMover : MonoBehaviour
 
     private bool isMoving = false;
 
+    [SerializeField] private Transform BackGround;
+
     private void Awake()
     {
         if (Instance == null)
@@ -42,7 +44,7 @@ public class CameraMover : MonoBehaviour
         float duration = 3f; // 移動持續時間
         float elapsedTime = 0f;
         Vector3 startPosition = Camera.main.transform.position;
-        Vector3 targetPosition = new Vector3(startPosition.x, targetY+0.3f, startPosition.z);
+        Vector3 targetPosition = new Vector3(startPosition.x, targetY, startPosition.z);
 
         while (elapsedTime < duration)
         {
