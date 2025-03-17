@@ -142,8 +142,8 @@ public class GameManager : MonoBehaviour
 
     public void OnRuleClick()
     {
-        _rulePrefab.SetActive(false);
         backgroundScene.SetActive(true);
+        _rulePrefab.SetActive(false);
         hasGameFinished = false;
         hasGameStart = true;
 
@@ -263,13 +263,23 @@ public class GameManager : MonoBehaviour
 
         if (currentLevelIndex + 1 <= _levels.Count)
         {
-            Level nextLevel = _levels[currentLevelIndex];
-            float targetY = nextLevel.Position.y + nextLevel.Row / 2f; // 計算新關卡的目標 Y 座標
-            // 呼叫 CameraMover 來移動攝影機，並在移動完成後載入下一關
-            CameraMover.Instance.MoveToNextLevel(targetY, () =>
-            {
-                StartCoroutine(LoadNextLevelAfterDelay()); // 移動結束後載入新關卡
-            });
+            if (currentLevelIndex == 1) {
+                Level nextLevel = _levels[currentLevelIndex];
+                float targetY = nextLevel.Position.y + nextLevel.Row / 2f; // 計算新關卡的目標 Y 座標
+                
+                CameraMover.Instance.MoveToNextLevel(targetY, () =>
+                {
+                    StartCoroutine(LoadNextLevelAfterDelay()); // 移動結束後載入新關卡
+                });                                                           // 呼叫 CameraMover 來移動攝影機，並在移動完成後載入下一關
+            } else if(currentLevelIndex == 2){
+                Level nextLevel = _levels[currentLevelIndex];
+                float targetY = nextLevel.Position.y + nextLevel.Row / 1f; // 計算新關卡的目標 Y 座標
+                
+                CameraMover.Instance.MoveToNextLevel(targetY, () =>
+                {
+                    StartCoroutine(LoadNextLevelAfterDelay()); // 移動結束後載入新關卡
+                });                                                           // 呼叫 CameraMover 來移動攝影機，並在移動完成後載入下一關
+            }
 
             GachaSystem.Instance.resultScene.SetActive(false);
         }

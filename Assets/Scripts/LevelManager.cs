@@ -39,12 +39,12 @@ public class LevelManager
 
                 if (new Vector2Int(i, j) == level.StartPosition)
                 {
-                    _cells[i, j].SetStartColor();
+                    _cells[i, j].SetStartSprite();
                 }
 
                 if (new Vector2Int(i, j) == level.EndPosition)
                 {
-                    _cells[i, j].SetEndColor();
+                    _cells[i, j].SetEndSprite();
                 }
             }
         }
