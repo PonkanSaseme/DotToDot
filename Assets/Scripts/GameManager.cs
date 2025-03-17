@@ -115,6 +115,7 @@ public class GameManager : MonoBehaviour
         if (!hasGameStart || hasGameFinished||hasGamePass) return;
         
         StartCoroutine(DelayedClear());
+        AudioManager.Instance.PlaySFX(4);
     }
 
     public void StartGame()

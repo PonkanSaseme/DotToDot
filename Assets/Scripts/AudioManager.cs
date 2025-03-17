@@ -73,10 +73,11 @@ public class AudioManager : MonoBehaviour
     // 當按下按鈕時播放音效
     public void OnPointerDown(PointerEventData eventData)
     {
+
         // 確保只有在音效未播放時才播放音效
         if (!sfxSource.isPlaying)
         {
-            sfxSource.PlayOneShot(sfxClips[4]); // 播放按鈕音效
+            sfxSource.PlayOneShot(sfxClips[0]); // 播放按鈕音效
         }
     }
 
