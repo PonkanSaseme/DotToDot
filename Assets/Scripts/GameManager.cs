@@ -99,6 +99,7 @@ public class GameManager : MonoBehaviour
 
     private void OnTouchPerformed(InputAction.CallbackContext context)
     {
+        AudioManager.Instance.PlaySFX(3);
         if (!hasGameStart || hasGameFinished || hasGamePass) return; // 確保遊戲已開始且未結束
 
         // 確保 _levelManager 已經被初始化
@@ -112,14 +113,16 @@ public class GameManager : MonoBehaviour
     {
         isPressing = false;
         if (!hasGameStart || hasGameFinished||hasGamePass) return;
-
+        
         StartCoroutine(DelayedClear());
     }
 
     public void StartGame()
     {
         startScene.SetActive(false);
+        AudioManager.Instance.PlaySFX(0);
         transDemo.enabled = true;
+        AudioManager.Instance.StartMusic();
 
         TransitionScreenManager transition = FindObjectOfType<TransitionScreenManager>();
         // 確保不重複訂閱事件
@@ -146,6 +149,7 @@ public class GameManager : MonoBehaviour
         _rulePrefab.SetActive(false);
         hasGameFinished = false;
         hasGameStart = true;
+        AudioManager.Instance.PlaySFX(0);
 
         LoadLevel(currentLevelIndex);
     }

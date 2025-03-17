@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\Editor\LevelEditor.cs" />
+    <Compile Include="Assets\WebMobileInputFix-master\WebMobileInputFix-master\Assets\KeyboardWebGL\Editor\FixIndexFile.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
