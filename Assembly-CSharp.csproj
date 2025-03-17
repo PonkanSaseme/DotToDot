@@ -61,6 +61,7 @@
     <Compile Include="Assets\Demo\Scripts\Drawing\DrawingTool.cs" />
     <Compile Include="Assets\Samples\Input System\1.4.4\Simple Demo\SimpleControls.cs" />
     <Compile Include="Assets\Samples\Input System\1.4.4\Simple Demo\SimpleController_UsingActions.cs" />
+    <Compile Include="Assets\Scripts\InputFieldHelper.cs" />
     <Compile Include="Assets\Demo\Scripts\Drawing\DrawingController.cs" />
     <Compile Include="Assets\Samples\Input System\1.4.4\Custom Device\CustomDevice.cs" />
     <Compile Include="Assets\Scripts\Level.cs" />
@@ -111,7 +112,6 @@
     <Compile Include="Assets\Demo\Scripts\Menu\LevelSelectScreen.cs" />
     <Compile Include="Assets\Demo\Scripts\Drawing\DrawingLine.cs" />
     <Compile Include="Assets\Samples\Input System\1.4.4\Custom Device Usages\CustomDeviceUsages.cs" />
-    <Compile Include="Assets\Scripts\InputFieldHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Resources\OFL.txt" />
