@@ -278,7 +278,7 @@ public class GameManager : MonoBehaviour
     // 延遲載入下一關，確保移動過程不會瞬間跳過
     private IEnumerator LoadNextLevelAfterDelay()
     {
-        yield return new WaitForSeconds(1.5f); // 等待攝影機移動 + 停頓時間
+        yield return new WaitForSeconds(0.3f); // 等待攝影機移動 + 停頓時間
         hasGameFinished = false;
         LoadLevel(currentLevelIndex, true); // 傳遞 true 來標識是重新繪製
     }
