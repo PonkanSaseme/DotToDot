@@ -140,15 +140,15 @@ public class GachaSystem : MonoBehaviour
         {
             case "A":
                 sprite = iconA;
-                rewardtext = "糰子";
+                rewardtext = "恭喜獲得道具";
                 break;
             case "B":
                 sprite = iconB;
-                rewardtext = "小氣球";
+                rewardtext = "恭喜獲得道具";
                 break;
             case "C":
                 sprite = iconC;
-                rewardtext = "小郵票";
+                rewardtext = "恭喜獲得道具";
                 break;
         }
 
@@ -176,15 +176,15 @@ public class GachaSystem : MonoBehaviour
         switch (drawResult)
         {
             case "AA":
-                finalText = "糰子";
+                finalText = "獲得糰子";
                 sprite = iconA;
                 break;
             case "BB":
-                finalText = "小氣球";
+                finalText = "獲得小氣球";
                 sprite = iconB;
                 break;
             default:
-                finalText = "小郵票";
+                finalText = "獲得小郵票";
                 sprite = iconC;
                 break;
         }
