@@ -36,4 +36,4 @@ com.unity.modules.video@1.0.0
 com.unity.modules.vr@1.0.0
 com.unity.modules.wind@1.0.0
 com.unity.modules.xr@1.0.0
-DotToDot@1.6
+DotToDot@1.6.1
