@@ -6604,7 +6604,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -123, y: -52}
+  m_AnchoredPosition: {x: -103, y: -80}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1396791461
@@ -6627,7 +6627,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u73A9\u5BB6\u9700\u5728\u56FA\u5B9A\u7684\u65B9\u683C\u4E0A\uFF0C\n\u4EE5\u4E00\u7B46\u756B\u7DDA\u7684\u65B9\u5F0F\uFF0C\u5F9E\u8D77\n\u9EDE\u8D70\u5230\u7D42\u9EDE\u3002\n\n\u53EA\u80FD\u6CBF\u8457\u5782\u76F4\u6216\u6C34\u5E73\u65B9\u5411\n\u79FB\u52D5\uFF0C\u4E14\u4E0D\u80FD\u56DE\u982D\u6216\u65B7\u7DDA\u3002"
+  m_text: "\u73A9\u5BB6\u9700\u8981\u5F9E\u8D77\u9EDE\u51FA\u767C\uFF0C\u7528\n\u4E00\u7B46\u756B\u7684\u65B9\u5F0F\u8D70\u5230\u7D42\u9EDE\uFF0C\n\u4E26\u7D93\u904E\u6BCF\u500B\u683C\u5B50\u4E00\u6B21\u3002\r\n\r\n\u79FB\u52D5\u65B9\u5F0F\uFF1A\r\n\uFF0E\u53EA\u80FD\u4E0A\u4E0B\u6216\u5DE6\u53F3\u79FB\u52D5\uFF0C\n   
+    \u4E0D\u80FD\u659C\u8D70\u3002\r\n\uFF0E\u4E0D\u80FD\u56DE\u982D\u6216\u8DF3\u904E\u683C\u5B50\u3002\r\n\uFF0E\u5FC5\u9808\u4E00\u7B46\u756B\u7DDA\uFF0C\u4E0D\u80FD\u4E2D\n    
+    \u65B7\u3002"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3880e550033c02144afe2cebd913c153, type: 2}
   m_sharedMaterial: {fileID: -5748622557467321397, guid: 3880e550033c02144afe2cebd913c153, type: 2}
@@ -6654,8 +6656,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 40
-  m_fontSizeBase: 40
+  m_fontSize: 36
+  m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -11512,6 +11514,10 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3559426446725634972, guid: ae27b3e5b7f911c458e26464a5c0871b, type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 6041494435384551540, guid: ae27b3e5b7f911c458e26464a5c0871b, type: 3}
       propertyPath: m_Type
       value: 0
@@ -11642,7 +11648,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6041494435583025886, guid: ae27b3e5b7f911c458e26464a5c0871b, type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6041494435583025886, guid: ae27b3e5b7f911c458e26464a5c0871b, type: 3}
       propertyPath: m_SizeDelta.x
