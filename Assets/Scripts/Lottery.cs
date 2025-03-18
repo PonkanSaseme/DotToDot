@@ -14,14 +14,14 @@ public class Lottery : MonoBehaviour
         // 定義獎項和對應的機率
         (string, float)[] prizes = new (string, float)[]
         {
-            ("AA", 0.01f),
+            ("AA", 0.06f),
             ("BB", 0.07f),
-            ("AB", 0.0767f), ("BA", 0.0767f),
-            ("AC", 0.0767f), ("CA", 0.0767f),
-            ("BC", 0.0767f), ("CB", 0.0767f),
-            ("AD", 0.0767f), ("DA", 0.0767f),
-            ("BD", 0.0767f), ("DB", 0.0767f),
-            ("CD", 0.0767f), ("DC", 0.0767f)
+            ("AB", 0.0621f), ("BA", 0.0621f),
+            ("AC", 0.0621f), ("CA", 0.0621f),
+            ("BC", 0.0621f), ("CB", 0.0621f),
+            ("AD", 0.0621f), ("DA", 0.0621f),
+            ("BD", 0.0621f), ("DB", 0.0621f),
+            ("CD", 0.0621f), ("DC", 0.0621f)
         };
 
         float rand = UnityEngine.Random.value; // 取得 0~1 之間的隨機數
