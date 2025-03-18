@@ -176,15 +176,15 @@ public class GachaSystem : MonoBehaviour
         switch (drawResult)
         {
             case "AA":
-                finalText = "獲得糰子";
+                finalText = "歐氣降臨!你就是那個天選之人!";
                 sprite = iconA;
                 break;
             case "BB":
-                finalText = "獲得小氣球";
+                finalText = "現場應援可至櫃台領取小禮物";
                 sprite = iconB;
                 break;
             default:
-                finalText = "獲得小郵票";
+                finalText = "現場應援可至櫃台領取小禮物";
                 sprite = iconC;
                 break;
         }
