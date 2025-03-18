@@ -24,6 +24,7 @@ public class GachaSystem : MonoBehaviour
     [SerializeField] public Image secondRewardImage; // 第二個獎勵圖片
     [SerializeField] public TextMeshProUGUI firstRewardText;  // 第一個獎勵文字
     [SerializeField] public TextMeshProUGUI secondRewardText; // 第二個獎勵文字
+    [SerializeField] public TextMeshProUGUI finalResultID; // 隱藏文字
 
     [SerializeField] private Button closeButton;     // 關閉按鈕
     public GameObject resultScene; // 抽獎結果畫面
@@ -47,8 +48,10 @@ public class GachaSystem : MonoBehaviour
     [SerializeField] private TMP_InputField enterID;   // 玩家輸入ID
 
     [Header("機率用項目")]
-    private float A_rate = 0.01f;
-    private float B_rate = 0.07f;
+    private float A_rate = 0.06f;
+    private float B_rate = 0.3f;
+    private float C_rate = 0.3f;
+    private float D_rate = 0.34f;
 
 
 
@@ -150,6 +153,10 @@ public class GachaSystem : MonoBehaviour
                 sprite = iconC;
                 rewardtext = "恭喜獲得道具";
                 break;
+            case "D":
+                sprite = iconD;
+                rewardtext = "恭喜獲得道具";
+                break;
         }
 
         return (sprite, rewardtext);
@@ -162,7 +169,8 @@ public class GachaSystem : MonoBehaviour
         float rand = UnityEngine.Random.value; // 取得 0~1 之間的隨機數
         if (rand < A_rate) return "A";
         if (rand < A_rate + B_rate) return "B";
-        return "C";
+        if (rand < A_rate + B_rate + C_rate) return "C";
+        return "D";
     }
 
     /// 決定最終獎勵
@@ -178,14 +186,17 @@ public class GachaSystem : MonoBehaviour
             case "AA":
                 finalText = "歐氣降臨!你就是那個天選之人!";
                 sprite = iconA;
+                finalResultID.alpha = 1;
                 break;
             case "BB":
                 finalText = "現場應援可至櫃台領取小禮物";
                 sprite = iconB;
+                finalResultID.alpha = 0;
                 break;
             default:
                 finalText = "現場應援可至櫃台領取小禮物";
                 sprite = iconC;
+                finalResultID.alpha = 0;
                 break;
         }
         PlayerPrefs.SetString("FinalReward", finalText);
